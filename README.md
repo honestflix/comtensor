@@ -1,2 +1,3 @@
 # comtensor
-Bridge commune to bittensor
+
+![Uploading image.png…]()
