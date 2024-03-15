@@ -20,6 +20,7 @@ class BaseCrossval(ABC):
         self.topk = topk
         self.top_miners = self.get_top_mienrs()
         self.block = self.subtensor.block
+        self.is_thread_running = False
     # def query(self):
     #     ...
     #     # TODO: Developer have to implement this method to query the miner
