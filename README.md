@@ -13,3 +13,6 @@
 
 
 </div>
+
+----------
+## How to contribute

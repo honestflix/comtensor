@@ -6,6 +6,9 @@ __pycache__/
 # C extensions
 *.so
 
+crossvals/healthcare/cache/
+crossvals/healthcare/model/
+
 # Distribution / packaging
 .Python
 build/
