@@ -55,7 +55,8 @@
     import bittensor as bt
     from constants import BASE_DIR
     from base.commit_based_crossval import CommitBasedCrossval
-    class HealthcareCrossval(CommitBasedCrossval):
-    ```
+
+    class HealthcareCrosscal(CommitBasedCrossval):
+        ...
 - Then customize this class with your own functions and implementing abstruct functions.
 
