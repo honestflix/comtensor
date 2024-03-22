@@ -40,6 +40,13 @@
     python3 -m pip install -r requirements.txt
     ```
 
+## Running Python Scripts
+
+We can run each subnet code according to their own guide.
+
+ex. For Healthcare subnet, please read [crossvals/healthcare/readme.md](./crossvals/healthcare/readme.md)
+
+
 ## How to contribute
 
 - Make sub-directory in `crossvals` directory and name it with subnet name.
@@ -58,4 +65,6 @@
     class HealthcareCrossval(CommitBasedCrossval):
     ```
 - Then customize this class with your own functions and implementing abstruct functions.
+
+- Additionally, don't forget write readme for each subnet code.
 

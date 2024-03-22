@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from crossval import BaseCrossval
+from base.crossval import BaseCrossval
 import bittensor as bt
 class SynapseBasedCrossval(BaseCrossval):
     def __init__(self, netuid = 1, wallet_name = None, wallet_hotkey = None, network = "finney", topk = 10):
