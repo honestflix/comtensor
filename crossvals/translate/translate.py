@@ -12,16 +12,19 @@ class Translate(bt.Synapse):
     source_lang: str = pydantic.Field(..., allow_mutation=False)
     target_lang: str = pydantic.Field(..., allow_mutation=False)
     required_hash_fields: list[str] = pydantic.Field(  ["source_texts", "source_lang", "target_lang"], allow_mutation = False)
-class TranlsateCrossValidator(SynapseBasedCrossval):
+class TranslateCrossValidator(SynapseBasedCrossval):
     def __init__(self, netuid = 2, wallet_name = 'NI', wallet_hotkey = 'ni', network = "finney", topk = 1):
         super().__init__(netuid, wallet_name, wallet_hotkey, network, topk)
         print([item['uid'] for item in self.top_miners])
         self.dendrite = bt.dendrite( wallet = self.wallet )
+        self.source_lang = "en"
+        self.target_lang = "es"
+        self.timeout = 60
     def forward(self, text):
         translate_synapse = Translate(
             source_texts = [text],
-            source_lang = "en",
-            target_lang = "es"
+            source_lang = self.source_lang,
+            target_lang = self.target_lang
         )
         axons = [self.metagraph.axons[i['uid']] for i in self.top_miners]
         responses = self.dendrite.query(
@@ -36,7 +39,12 @@ class TranlsateCrossValidator(SynapseBasedCrossval):
     def run(self, text):
         response = self.forward(text)
         return response
+    def setLang(self, source, target):
+        self.source_lang = source
+        self.target_lang = target
+    def setTimeout(self, timeout):
+        self.timeout = timeout
 
-
-translate_crossval = TranlsateCrossValidator()
-print(translate_crossval.run("Hello, how are you?"))
+if __name__ == "__main__":
+    translate_crossval = TranslateCrossValidator()
+    print(translate_crossval.run("Hello, how are you?"))
