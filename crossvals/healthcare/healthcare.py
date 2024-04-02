@@ -12,7 +12,7 @@ from tensorflow.keras.preprocessing import image
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
 os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 class HealthcareCrossval(CommitBasedCrossval):
-    def __init__(self, netuid = 1, wallet_name = None, wallet_hotkey = None, network = "finney", topk = 10, subtensor = None):
+    def __init__(self, netuid = 31, wallet_name = None, wallet_hotkey = None, network = "finney", topk = 10, subtensor = None):
         super().__init__(netuid, wallet_name, wallet_hotkey, network, topk, subtensor)
         self.local_dir = os.path.join("crossvals/healthcare/model")
         self.cache_dir = os.path.join(BASE_DIR, "crossvals/healthcare/cache")
@@ -52,13 +52,16 @@ class HealthcareCrossval(CommitBasedCrossval):
         selected_labels = [labels_list[idx] for idx in masked_index]
         return "|".join(selected_labels)
     def run_custom_thread(self):
-        commits = []
-        for miner_axon in self.top_miners:
-            commit = self.getCommit(miner_axon=miner_axon)
-            print(f"Commit from miner {miner_axon['uid']}: {commit}")
-            commits.append(commit)
-        for commit in commits:
-            self.download_model(commit)
+        try:
+            commits = []
+            for miner_axon in self.top_miners:
+                commit = self.getCommit(miner_axon=miner_axon)
+                print(f"Commit from miner {miner_axon['uid']}: {commit}")
+                commits.append(commit)
+            for commit in commits:
+                self.download_model(commit)
+        except Exception as e:
+            bt.logging.error(f"Error occured while running custom thread: {e}")
     def download_model(self, commit):
         try:
             repo_id = commit.split(' ')[0]
