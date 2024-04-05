@@ -4,7 +4,7 @@ import threading
 import time
 class BaseCrossval(ABC):
         
-    def __init__(self, netuid = 1, wallet_name = None, wallet_hotkey = None, network = "finney", topk = 10, subtensor = None):
+    def __init__(self, netuid = 1, wallet_name = None, wallet_hotkey = None, network = "finney", topk = 1, subtensor = None):
         self.netuid = netuid
         if wallet_name is not None and wallet_hotkey is not None:
             try:
