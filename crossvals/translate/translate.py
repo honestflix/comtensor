@@ -1,8 +1,6 @@
 import os
 import bittensor as bt
 from base.synapse_based_crossval import SynapseBasedCrossval
-
-import bittensor as bt
 import pydantic
 from typing import List
 

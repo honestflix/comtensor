@@ -46,6 +46,9 @@ We can run each subnet code according to their own guide.
 
 ex. For Healthcare subnet, please read [crossvals/healthcare/readme.md](./crossvals/healthcare/readme.md)
 
+## Running backend server
+
+```uvicorn server:app --host 0.0.0.0 --port 8000 --reload```
 
 ## How to contribute
 

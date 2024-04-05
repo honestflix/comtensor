@@ -1,10 +1,12 @@
 import shutil
-from fastapi import FastAPI
+from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 from crossvals.translate.translate import TranslateCrossValidator
 from pydantic import BaseModel
 from crossvals.healthcare.healthcare import HealthcareCrossval
+from crossvals.textprompting.text import TextPromtingCrossValidator
 from fastapi import UploadFile, File, HTTPException
+import asyncio
 app = FastAPI()
 
 # Enable all cross-origin
@@ -16,8 +18,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-translate_crossval = TranslateCrossValidator()
-healthcare_crossval = HealthcareCrossval(netuid = 31, topk = 1)
 # healthcare_crossval.run_background_thread()
 
 class TranlsateItem(BaseModel):
@@ -25,6 +25,20 @@ class TranlsateItem(BaseModel):
     source_lang: str = "en"
     target_lang: str = "es"
     timeout: int = None
+class TextPropmtItem(BaseModel):
+    roles: list[str] = ["user", "assistant"]
+    messages: list[str] = [
+        "What's the weather like today?",
+        "The weather is sunny with a high of 25 degrees.",
+        "Could you set a reminder for me to take my umbrella tomorrow?",
+        "Reminder set for tomorrow to take your umbrella.",
+        "Thank you! What time is my first meeting tomorrow?",
+        "Your first meeting tomorrow is at 9 AM.",
+        "Can you play some music?",
+        "Playing your favorite playlist now.",
+        "How's the traffic to work?",
+        "Traffic is light, it should take about 15 minutes to get to work."
+    ]
 
 @app.get("/")
 def read_root():
@@ -65,3 +79,25 @@ async def upload_image(image: UploadFile = File(...)):
         return {"result": result}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/text-prompting/")
+def text_prompting(item: TextPropmtItem):
+    return textpromtingCrossval.run(item.roles, item.messages)
+
+# @app.websocket("/textprompting")
+# async def text_prompting(websocket: WebSocket):
+#     print("sdf")
+#     await websocket.accept()
+#     # data = await websocket.receive_text()
+#     streamingResponse = textpromtingCrossval.run()
+#     while True:
+#         print("tread_running...")
+#         data = await streamingResponse[0].__anext__()
+#         await websocket.send_json({"message": data})
+#         print(data)
+#         await asyncio.sleep(1)
+
+
+translate_crossval = TranslateCrossValidator()
+healthcare_crossval = HealthcareCrossval(netuid = 31, topk = 1)
+textpromtingCrossval = TextPromtingCrossValidator()
