@@ -5,6 +5,7 @@ from crossvals.translate.translate import TranslateCrossValidator
 from pydantic import BaseModel
 from crossvals.healthcare.healthcare import HealthcareCrossval
 from crossvals.textprompting.text import TextPromtingCrossValidator
+from crossvals.image_aichemy.aichemy import ImageAIchemyCrossVal
 from fastapi import UploadFile, File, HTTPException
 import asyncio
 app = FastAPI()
@@ -40,6 +41,9 @@ class TextPropmtItem(BaseModel):
         "Traffic is light, it should take about 15 minutes to get to work."
     ]
 
+class ImageItem(BaseModel):
+    imageText: str
+
 @app.get("/")
 def read_root():
     return translate_crossval.run("Hello, how are you?")
@@ -53,7 +57,10 @@ def tranlsate_item(item: TranlsateItem):
         translate_crossval.setTimeout(item.timeout)
     return translate_crossval.run(item.text)
 
-
+@app.post("/image-aichemy/")
+def image_generate(item: ImageItem):
+    print(item.imageText);
+    return imageaichemy_crossval.run(item.imageText)
 
 class ImageUpload(BaseModel):
     file: UploadFile = File(...)
@@ -101,3 +108,4 @@ def text_prompting(item: TextPropmtItem):
 translate_crossval = TranslateCrossValidator()
 healthcare_crossval = HealthcareCrossval(netuid = 31, topk = 1)
 textpromtingCrossval = TextPromtingCrossValidator()
+imageaichemy_crossval = ImageAIchemyCrossVal()
