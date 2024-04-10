@@ -1,13 +1,17 @@
 import shutil
 from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
+
 from crossvals.translate.translate import TranslateCrossValidator
-from pydantic import BaseModel
 from crossvals.healthcare.healthcare import HealthcareCrossval
 from crossvals.textprompting.text import TextPromtingCrossValidator
 from crossvals.sybil.sybil import SybilCrossVal
+from crossvals.openkaito.openkaito import OpenkaitoCrossVal
+
 from fastapi import UploadFile, File, HTTPException
 import asyncio
+from pydantic import BaseModel
+
 app = FastAPI()
 
 # Enable all cross-origin
@@ -43,6 +47,7 @@ class TextPropmtItem(BaseModel):
 
 class SybilItem(BaseModel):
     sources: str
+class OpenkaitoItem(BaseModel):
     query: str
 
 @app.get("/")
@@ -60,6 +65,10 @@ def tranlsate_item(item: TranlsateItem):
 @app.post("/sybil/")
 def sybil_search(item: SybilItem):
     return sybil_crossval.run({'sources': item.sources, 'query': item.query})
+
+@app.post("/openkaito/")
+async def openkaito_search(item: OpenkaitoItem):
+    await openkaito_crossval.run(item.query)
 
 class ImageUpload(BaseModel):
     file: UploadFile = File(...)
@@ -80,7 +89,7 @@ async def upload_image(image: UploadFile = File(...)):
         with open(f"{image.filename}", "wb") as buffer:
             shutil.copyfileobj(image.file, buffer)
             result = healthcare_crossval.run(image.filename)
-            # print(result)
+            # print(result)     
         # You can process the file here, and then return a response
         return {"result": result}
     except Exception as e:
@@ -108,3 +117,4 @@ translate_crossval = TranslateCrossValidator()
 healthcare_crossval = HealthcareCrossval(netuid = 31, topk = 1)
 textpromtingCrossval = TextPromtingCrossValidator()
 sybil_crossval = SybilCrossVal()
+openkaito_crossval = OpenkaitoCrossVal()
