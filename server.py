@@ -47,6 +47,8 @@ class TextPropmtItem(BaseModel):
 
 class SybilItem(BaseModel):
     sources: str
+    query: str
+
 class OpenkaitoItem(BaseModel):
     query: str
 
