@@ -28,7 +28,7 @@ class OpenkaitoCrossVal(SynapseBasedCrossval):
             search_query.timeout = 90
         else:
             # 80% chance to send index author data task with crawling and indexing
-            if random_number < 0.8:
+            if random_number < 0.1:
                 search_query = generate_author_index_task(
                     size=10,  # author index data size
                     num_authors=2,
@@ -38,7 +38,7 @@ class OpenkaitoCrossVal(SynapseBasedCrossval):
                 # instead of relying on the validator tasks
                 search_query.timeout = 90
             # 10% chance to send author search task without crawling
-            elif random_number < 0.9:
+            elif random_number < 0.2:
                 search_query = generate_author_index_task(
                     size=10,  # author index data size
                     num_authors=2,
@@ -66,4 +66,5 @@ class OpenkaitoCrossVal(SynapseBasedCrossval):
 
     async def run(self, query_string):
         response = await self.forward(query_string);
+        print(response)
         return response

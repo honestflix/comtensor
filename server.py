@@ -59,7 +59,7 @@ def tranlsate_item(item: TranlsateItem):
 
 @app.post("/openkaito/")
 async def openkaito_search(item: OpenkaitoItem):
-    await openkaito_crossval.run(item.query)
+    return await openkaito_crossval.run(item.query)
 
 
 class ImageUpload(BaseModel):
