@@ -82,7 +82,7 @@ def sybil_search(item: SybilItem):
 
 @app.post("/openkaito/")
 async def openkaito_search(item: OpenkaitoItem):
-    await openkaito_crossval.run(item.query)
+    return await openkaito_crossval.run(item.query)
 
 @app.post("/itsai/")
 async def llm_detection(item: ItsaiItem):
