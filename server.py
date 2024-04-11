@@ -7,10 +7,12 @@ from crossvals.healthcare.healthcare import HealthcareCrossval
 from crossvals.textprompting.text import TextPromtingCrossValidator
 from crossvals.sybil.sybil import SybilCrossVal
 from crossvals.openkaito.openkaito import OpenkaitoCrossVal
+from crossvals.itsai.itsai import ItsaiCrossVal
 
 from fastapi import UploadFile, File, HTTPException
 import asyncio
 from pydantic import BaseModel
+from typing import List
 
 app = FastAPI()
 
@@ -52,6 +54,9 @@ class SybilItem(BaseModel):
 class OpenkaitoItem(BaseModel):
     query: str
 
+class ItsaiItem(BaseModel):
+    texts: List[str]
+
 @app.get("/")
 def read_root():
     return translate_crossval.run("Hello, how are you?")
@@ -71,6 +76,10 @@ def sybil_search(item: SybilItem):
 @app.post("/openkaito/")
 async def openkaito_search(item: OpenkaitoItem):
     await openkaito_crossval.run(item.query)
+
+@app.post("/itsai/")
+async def llm_detection(item: ItsaiItem):
+    return await itsai_crossval.run(item.texts)
 
 class ImageUpload(BaseModel):
     file: UploadFile = File(...)
@@ -120,3 +129,4 @@ healthcare_crossval = HealthcareCrossval(netuid = 31, topk = 1)
 textpromtingCrossval = TextPromtingCrossValidator()
 sybil_crossval = SybilCrossVal()
 openkaito_crossval = OpenkaitoCrossVal()
+itsai_crossval = ItsaiCrossVal()
