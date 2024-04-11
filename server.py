@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from crossvals.translate.translate import TranslateCrossValidator
 from crossvals.healthcare.healthcare import HealthcareCrossval
 from crossvals.textprompting.text import TextPromtingCrossValidator
+from crossvals.image_aichemy.aichemy import ImageAIchemyCrossVal
 from crossvals.sybil.sybil import SybilCrossVal
 from crossvals.openkaito.openkaito import OpenkaitoCrossVal
 from crossvals.itsai.itsai import ItsaiCrossVal
@@ -47,6 +48,8 @@ class TextPropmtItem(BaseModel):
         "Traffic is light, it should take about 15 minutes to get to work."
     ]
 
+class ImageItem(BaseModel):
+    imageText: str
 class SybilItem(BaseModel):
     sources: str
     query: str
@@ -68,6 +71,10 @@ def tranlsate_item(item: TranlsateItem):
     if item.timeout:
         translate_crossval.setTimeout(item.timeout)
     return translate_crossval.run(item.text)
+
+@app.post("/image-aichemy/")
+def image_generate(item: ImageItem):
+    return imageaichemy_crossval.run(item.imageText)
 
 @app.post("/sybil/")
 def sybil_search(item: SybilItem):
@@ -127,6 +134,7 @@ def text_prompting(item: TextPropmtItem):
 translate_crossval = TranslateCrossValidator()
 healthcare_crossval = HealthcareCrossval(netuid = 31, topk = 1)
 textpromtingCrossval = TextPromtingCrossValidator()
+imageaichemy_crossval = ImageAIchemyCrossVal()
 sybil_crossval = SybilCrossVal()
 openkaito_crossval = OpenkaitoCrossVal()
 itsai_crossval = ItsaiCrossVal()
