@@ -9,6 +9,7 @@ from crossvals.image_aichemy.aichemy import ImageAIchemyCrossVal
 from crossvals.sybil.sybil import SybilCrossVal
 from crossvals.openkaito.openkaito import OpenkaitoCrossVal
 from crossvals.itsai.itsai import ItsaiCrossVal
+from crossvals.audiogen.audiogen import AudioGenCrossVal
 
 from fastapi import UploadFile, File, HTTPException
 import asyncio
@@ -60,6 +61,10 @@ class OpenkaitoItem(BaseModel):
 class ItsaiItem(BaseModel):
     texts: List[str]
 
+class AudiogenItem(BaseModel):
+    type: str
+    prompt: str
+
 @app.get("/")
 def read_root():
     return translate_crossval.run("Hello, how are you?")
@@ -87,6 +92,10 @@ async def openkaito_search(item: OpenkaitoItem):
 @app.post("/itsai/")
 async def llm_detection(item: ItsaiItem):
     return await itsai_crossval.run(item.texts)
+
+@app.post("/audiogen")
+async def audio_generation(item: AudiogenItem):
+    return await audiogen_crossval.run(item.type, item.prompt)
 
 class ImageUpload(BaseModel):
     file: UploadFile = File(...)
@@ -138,3 +147,4 @@ imageaichemy_crossval = ImageAIchemyCrossVal()
 sybil_crossval = SybilCrossVal()
 openkaito_crossval = OpenkaitoCrossVal()
 itsai_crossval = ItsaiCrossVal()
+audiogen_crossval = AudioGenCrossVal()
