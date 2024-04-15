@@ -23,10 +23,8 @@ class FractalCrossVal(SynapseBasedCrossval):
             deserialize = False,
             timeout = timeout,
         )
-
-        print(response)
         
-        return output
+        return response
 
     def run(self, private_input):
         response = self.forward(private_input, 60)
