@@ -14,6 +14,7 @@ from crossvals.wombo.protocol import ImageGenerationClientInputs
 from crossvals.fractal.fractal import FractalCrossVal
 from crossvals.audiogen.audiogen import AudioGenCrossVal
 from crossvals.llm_defender.llm_defender import LLMDefenderCrossVal
+from crossvals.transcription.transcription import TranscriptionCrossVal
 
 from fastapi import UploadFile, File, HTTPException, Body
 import asyncio
@@ -79,6 +80,11 @@ class AudiogenItem(BaseModel):
 class LLMDefenderItem(BaseModel):
     analyzer: str
 
+class TranscriptionItem(BaseModel):
+    type: str
+    audio_url: str
+    audio_sample: bytes
+
 @app.get("/")
 def read_root():
     return translate_crossval.run("Hello, how are you?")
@@ -123,6 +129,11 @@ async def audio_generation(item: AudiogenItem):
 @app.post("/llm-defender")
 def llm_defender(item: LLMDefenderItem):
     return llmdefender_crossval.run({"analyzer": item.analyzer})
+
+@app.post("/transcription/")
+def transcription(item: TranscriptionItem):
+    return transcription_crossval.run({"type": item.type, "audio_url": item.audio_url, "audio_sample": item.audio_sample})
+
 
 class ImageUpload(BaseModel):
     file: UploadFile = File(...)
@@ -178,3 +189,4 @@ wombo_crossval = WomboCrossVal()
 fractal_crossval = FractalCrossVal()
 audiogen_crossval = AudioGenCrossVal()
 llmdefender_crossval = LLMDefenderCrossVal()
+transcription_crossval = TranscriptionCrossVal()

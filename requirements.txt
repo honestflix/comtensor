@@ -4,3 +4,5 @@ huggingface_hub
 pandas
 tensorflow==2.15.1
 numpy
+Pillow
+pytube
