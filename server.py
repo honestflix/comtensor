@@ -10,6 +10,8 @@ from crossvals.sybil.sybil import SybilCrossVal
 from crossvals.openkaito.openkaito import OpenkaitoCrossVal
 from crossvals.itsai.itsai import ItsaiCrossVal
 from crossvals.fractal.fractal import FractalCrossVal
+from crossvals.audiogen.audiogen import AudioGenCrossVal
+from crossvals.llm_defender.llm_defender import LLMDefenderCrossVal
 
 from fastapi import UploadFile, File, HTTPException
 import asyncio
@@ -64,6 +66,13 @@ class ItsaiItem(BaseModel):
 class FractalItem(BaseModel):
     query: str
 
+class AudiogenItem(BaseModel):
+    type: str
+    prompt: str
+
+class LLMDefenderItem(BaseModel):
+    analyzer: str
+
 @app.get("/")
 def read_root():
     return translate_crossval.run("Hello, how are you?")
@@ -95,6 +104,14 @@ async def llm_detection(item: ItsaiItem):
 @app.post("/fractal")
 def fractal_research(item: FractalItem):
     return fractal_crossval.run(item.query)
+
+@app.post("/audiogen")
+async def audio_generation(item: AudiogenItem):
+    return await audiogen_crossval.run(item.type, item.prompt)
+
+@app.post("/llm-defender")
+def llm_defender(item: LLMDefenderItem):
+    return llmdefender_crossval.run({"analyzer": item.analyzer})
 
 class ImageUpload(BaseModel):
     file: UploadFile = File(...)
@@ -147,3 +164,5 @@ sybil_crossval = SybilCrossVal()
 openkaito_crossval = OpenkaitoCrossVal()
 itsai_crossval = ItsaiCrossVal()
 fractal_crossval = FractalCrossVal()
+audiogen_crossval = AudioGenCrossVal()
+llmdefender_crossval = LLMDefenderCrossVal()
