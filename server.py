@@ -9,6 +9,7 @@ from crossvals.image_aichemy.aichemy import ImageAIchemyCrossVal
 from crossvals.sybil.sybil import SybilCrossVal
 from crossvals.openkaito.openkaito import OpenkaitoCrossVal
 from crossvals.itsai.itsai import ItsaiCrossVal
+from crossvals.audiogen.audiogen import AudioGenCrossVal
 from crossvals.llm_defender.llm_defender import LLMDefenderCrossVal
 
 from fastapi import UploadFile, File, HTTPException
@@ -61,6 +62,10 @@ class OpenkaitoItem(BaseModel):
 class ItsaiItem(BaseModel):
     texts: List[str]
 
+class AudiogenItem(BaseModel):
+    type: str
+    prompt: str
+
 class LLMDefenderItem(BaseModel):
     analyzer: str
 
@@ -91,6 +96,10 @@ async def openkaito_search(item: OpenkaitoItem):
 @app.post("/itsai/")
 async def llm_detection(item: ItsaiItem):
     return await itsai_crossval.run(item.texts)
+
+@app.post("/audiogen")
+async def audio_generation(item: AudiogenItem):
+    return await audiogen_crossval.run(item.type, item.prompt)
 
 @app.post("/llm-defender")
 def llm_defender(item: LLMDefenderItem):
@@ -146,4 +155,5 @@ imageaichemy_crossval = ImageAIchemyCrossVal()
 sybil_crossval = SybilCrossVal()
 openkaito_crossval = OpenkaitoCrossVal()
 itsai_crossval = ItsaiCrossVal()
+audiogen_crossval = AudioGenCrossVal()
 llmdefender_crossval = LLMDefenderCrossVal()
