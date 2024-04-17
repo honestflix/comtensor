@@ -9,14 +9,16 @@ from crossvals.image_aichemy.aichemy import ImageAIchemyCrossVal
 from crossvals.sybil.sybil import SybilCrossVal
 from crossvals.openkaito.openkaito import OpenkaitoCrossVal
 from crossvals.itsai.itsai import ItsaiCrossVal
+from crossvals.wombo.wombo import WomboCrossVal
+from crossvals.wombo.protocol import ImageGenerationClientInputs
 from crossvals.fractal.fractal import FractalCrossVal
 from crossvals.audiogen.audiogen import AudioGenCrossVal
 from crossvals.llm_defender.llm_defender import LLMDefenderCrossVal
 
-from fastapi import UploadFile, File, HTTPException
+from fastapi import UploadFile, File, HTTPException, Body
 import asyncio
 from pydantic import BaseModel
-from typing import List
+from typing import List, Annotated
 
 app = FastAPI()
 
@@ -63,6 +65,10 @@ class OpenkaitoItem(BaseModel):
 class ItsaiItem(BaseModel):
     texts: List[str]
 
+class WomboItem(BaseModel):
+    watermark: bool
+    prompt: str
+
 class FractalItem(BaseModel):
     query: str
 
@@ -100,6 +106,11 @@ async def openkaito_search(item: OpenkaitoItem):
 @app.post("/itsai/")
 async def llm_detection(item: ItsaiItem):
     return await itsai_crossval.run(item.texts)
+
+@app.post("/wombo/")
+async def generate(item: WomboItem):
+    print(item)
+    return await wombo_crossval.run(ImageGenerationClientInputs(prompt=item.prompt, watermark=item.watermark))
 
 @app.post("/fractal")
 def fractal_research(item: FractalItem):
@@ -163,6 +174,7 @@ imageaichemy_crossval = ImageAIchemyCrossVal()
 sybil_crossval = SybilCrossVal()
 openkaito_crossval = OpenkaitoCrossVal()
 itsai_crossval = ItsaiCrossVal()
+wombo_crossval = WomboCrossVal()
 fractal_crossval = FractalCrossVal()
 audiogen_crossval = AudioGenCrossVal()
 llmdefender_crossval = LLMDefenderCrossVal()
