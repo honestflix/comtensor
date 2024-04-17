@@ -9,6 +9,7 @@ from crossvals.image_aichemy.aichemy import ImageAIchemyCrossVal
 from crossvals.sybil.sybil import SybilCrossVal
 from crossvals.openkaito.openkaito import OpenkaitoCrossVal
 from crossvals.itsai.itsai import ItsaiCrossVal
+from crossvals.fractal.fractal import FractalCrossVal
 from crossvals.audiogen.audiogen import AudioGenCrossVal
 from crossvals.llm_defender.llm_defender import LLMDefenderCrossVal
 
@@ -62,6 +63,9 @@ class OpenkaitoItem(BaseModel):
 class ItsaiItem(BaseModel):
     texts: List[str]
 
+class FractalItem(BaseModel):
+    query: str
+
 class AudiogenItem(BaseModel):
     type: str
     prompt: str
@@ -96,6 +100,10 @@ async def openkaito_search(item: OpenkaitoItem):
 @app.post("/itsai/")
 async def llm_detection(item: ItsaiItem):
     return await itsai_crossval.run(item.texts)
+
+@app.post("/fractal")
+def fractal_research(item: FractalItem):
+    return fractal_crossval.run(item.query)
 
 @app.post("/audiogen")
 async def audio_generation(item: AudiogenItem):
@@ -155,5 +163,6 @@ imageaichemy_crossval = ImageAIchemyCrossVal()
 sybil_crossval = SybilCrossVal()
 openkaito_crossval = OpenkaitoCrossVal()
 itsai_crossval = ItsaiCrossVal()
+fractal_crossval = FractalCrossVal()
 audiogen_crossval = AudioGenCrossVal()
 llmdefender_crossval = LLMDefenderCrossVal()
