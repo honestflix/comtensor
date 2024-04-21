@@ -10,11 +10,17 @@ from crossvals.sybil.sybil import SybilCrossVal
 from crossvals.openkaito.openkaito import OpenkaitoCrossVal
 from crossvals.itsai.itsai import ItsaiCrossVal
 from crossvals.niche.niche import NicheCrossVal
+from crossvals.wombo.wombo import WomboCrossVal
+from crossvals.wombo.protocol import ImageGenerationClientInputs
+from crossvals.fractal.fractal import FractalCrossVal
+from crossvals.audiogen.audiogen import AudioGenCrossVal
+from crossvals.llm_defender.llm_defender import LLMDefenderCrossVal
+from crossvals.transcription.transcription import TranscriptionCrossVal
 
-from fastapi import UploadFile, File, HTTPException
+from fastapi import UploadFile, File, HTTPException, Body
 import asyncio
 from pydantic import BaseModel
-from typing import List
+from typing import List, Annotated
 
 app = FastAPI()
 
@@ -63,6 +69,24 @@ class ItsaiItem(BaseModel):
 
 class NicheItem(BaseModel):
     model_name: str
+class WomboItem(BaseModel):
+    watermark: bool
+    prompt: str
+
+class FractalItem(BaseModel):
+    query: str
+
+class AudiogenItem(BaseModel):
+    type: str
+    prompt: str
+
+class LLMDefenderItem(BaseModel):
+    analyzer: str
+
+class TranscriptionItem(BaseModel):
+    type: str
+    audio_url: str
+    audio_sample: bytes
 
 @app.get("/")
 def read_root():
@@ -95,6 +119,26 @@ async def llm_detection(item: ItsaiItem):
 @app.post("/niche/")
 def niche_generation(item: NicheItem):
     return niche_crossval.run(item)
+@app.post("/wombo/")
+async def generate(item: WomboItem):
+    print(item)
+    return await wombo_crossval.run(ImageGenerationClientInputs(prompt=item.prompt, watermark=item.watermark))
+
+@app.post("/fractal")
+def fractal_research(item: FractalItem):
+    return fractal_crossval.run(item.query)
+
+@app.post("/audiogen")
+async def audio_generation(item: AudiogenItem):
+    return await audiogen_crossval.run(item.type, item.prompt)
+
+@app.post("/llm-defender")
+def llm_defender(item: LLMDefenderItem):
+    return llmdefender_crossval.run({"analyzer": item.analyzer})
+
+@app.post("/transcription/")
+def transcription(item: TranscriptionItem):
+    return transcription_crossval.run({"type": item.type, "audio_url": item.audio_url, "audio_sample": item.audio_sample})
 
 class ImageUpload(BaseModel):
     file: UploadFile = File(...)
@@ -147,3 +191,8 @@ sybil_crossval = SybilCrossVal()
 openkaito_crossval = OpenkaitoCrossVal()
 itsai_crossval = ItsaiCrossVal()
 niche_crossval = NicheCrossVal()
+wombo_crossval = WomboCrossVal()
+fractal_crossval = FractalCrossVal()
+audiogen_crossval = AudioGenCrossVal()
+llmdefender_crossval = LLMDefenderCrossVal()
+transcription_crossval = TranscriptionCrossVal()
