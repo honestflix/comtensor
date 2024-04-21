@@ -9,6 +9,7 @@ from crossvals.image_aichemy.aichemy import ImageAIchemyCrossVal
 from crossvals.sybil.sybil import SybilCrossVal
 from crossvals.openkaito.openkaito import OpenkaitoCrossVal
 from crossvals.itsai.itsai import ItsaiCrossVal
+from crossvals.niche.niche import NicheCrossVal
 from crossvals.wombo.wombo import WomboCrossVal
 from crossvals.wombo.protocol import ImageGenerationClientInputs
 from crossvals.fractal.fractal import FractalCrossVal
@@ -66,6 +67,8 @@ class OpenkaitoItem(BaseModel):
 class ItsaiItem(BaseModel):
     texts: List[str]
 
+class NicheItem(BaseModel):
+    model_name: str
 class WomboItem(BaseModel):
     watermark: bool
     prompt: str
@@ -113,6 +116,9 @@ async def openkaito_search(item: OpenkaitoItem):
 async def llm_detection(item: ItsaiItem):
     return await itsai_crossval.run(item.texts)
 
+@app.post("/niche/")
+def niche_generation(item: NicheItem):
+    return niche_crossval.run(item)
 @app.post("/wombo/")
 async def generate(item: WomboItem):
     print(item)
@@ -133,7 +139,6 @@ def llm_defender(item: LLMDefenderItem):
 @app.post("/transcription/")
 def transcription(item: TranscriptionItem):
     return transcription_crossval.run({"type": item.type, "audio_url": item.audio_url, "audio_sample": item.audio_sample})
-
 
 class ImageUpload(BaseModel):
     file: UploadFile = File(...)
@@ -185,6 +190,7 @@ imageaichemy_crossval = ImageAIchemyCrossVal()
 sybil_crossval = SybilCrossVal()
 openkaito_crossval = OpenkaitoCrossVal()
 itsai_crossval = ItsaiCrossVal()
+niche_crossval = NicheCrossVal()
 wombo_crossval = WomboCrossVal()
 fractal_crossval = FractalCrossVal()
 audiogen_crossval = AudioGenCrossVal()
