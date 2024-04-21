@@ -16,6 +16,7 @@ from crossvals.fractal.fractal import FractalCrossVal
 from crossvals.audiogen.audiogen import AudioGenCrossVal
 from crossvals.llm_defender.llm_defender import LLMDefenderCrossVal
 from crossvals.transcription.transcription import TranscriptionCrossVal
+from crossvals.subvortex.subvortex import SubvortexCrossVal
 
 from fastapi import UploadFile, File, HTTPException, Body
 import asyncio
@@ -140,6 +141,10 @@ def llm_defender(item: LLMDefenderItem):
 def transcription(item: TranscriptionItem):
     return transcription_crossval.run({"type": item.type, "audio_url": item.audio_url, "audio_sample": item.audio_sample})
 
+@app.post("/subvortex/")
+async def subvortex_calc():
+    return await subvortex_crossval.run()
+
 class ImageUpload(BaseModel):
     file: UploadFile = File(...)
 
@@ -196,3 +201,4 @@ fractal_crossval = FractalCrossVal()
 audiogen_crossval = AudioGenCrossVal()
 llmdefender_crossval = LLMDefenderCrossVal()
 transcription_crossval = TranscriptionCrossVal()
+subvortex_crossval = SubvortexCrossVal()
