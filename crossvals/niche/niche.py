@@ -12,7 +12,7 @@ from crossvals.niche.offline_challenge import (
 
 
 MODEL_CONFIGS = yaml.load(
-    open("crossvals/niche/model_config.yaml"), yaml.FullLoader
+    open("./crossvals/niche/model_config.yaml"), yaml.FullLoader
 )
 
 def initialize_nicheimage_catalogue():
