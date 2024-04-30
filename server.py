@@ -17,6 +17,7 @@ from crossvals.audiogen.audiogen import AudioGenCrossVal
 from crossvals.llm_defender.llm_defender import LLMDefenderCrossVal
 from crossvals.transcription.transcription import TranscriptionCrossVal
 from crossvals.subvortex.subvortex import SubvortexCrossVal
+from crossvals.compute.compute import ComputeCrossVal
 from crossvals.bitagent.bitagent import BitagentCrossVal
 from crossvals.omegalabs.omegalabs import OmegalabsCrossVal
 
@@ -91,6 +92,9 @@ class TranscriptionItem(BaseModel):
     audio_url: str
     audio_sample: bytes
 
+class ComputeItem(BaseModel):
+    difficulty: int
+
 class OmegalabsItem(BaseModel):
     query: str
 
@@ -149,6 +153,10 @@ def transcription(item: TranscriptionItem):
 @app.post("/subvortex/")
 async def subvortex_calc():
     return await subvortex_crossval.run()
+
+@app.post("/compute/")
+async def compute(item: ComputeItem):
+    return compute_crossval.run(item)
 
 @app.post("/bitagent/")
 def bitagent():
@@ -219,5 +227,6 @@ audiogen_crossval = AudioGenCrossVal()
 llmdefender_crossval = LLMDefenderCrossVal()
 transcription_crossval = TranscriptionCrossVal()
 subvortex_crossval = SubvortexCrossVal()
+compute_crossval = ComputeCrossVal()
 bitagent_crossval = BitagentCrossVal()
 omegalabs_crossval = OmegalabsCrossVal()
