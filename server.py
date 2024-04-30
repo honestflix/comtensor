@@ -17,6 +17,7 @@ from crossvals.audiogen.audiogen import AudioGenCrossVal
 from crossvals.llm_defender.llm_defender import LLMDefenderCrossVal
 from crossvals.transcription.transcription import TranscriptionCrossVal
 from crossvals.subvortex.subvortex import SubvortexCrossVal
+from crossvals.omegalabs.omegalabs import OmegalabsCrossVal
 
 from fastapi import UploadFile, File, HTTPException, Body
 import asyncio
@@ -89,6 +90,9 @@ class TranscriptionItem(BaseModel):
     audio_url: str
     audio_sample: bytes
 
+class OmegalabsItem(BaseModel):
+    query: str
+
 @app.get("/")
 def read_root():
     return translate_crossval.run("Hello, how are you?")
@@ -144,6 +148,14 @@ def transcription(item: TranscriptionItem):
 @app.post("/subvortex/")
 async def subvortex_calc():
     return await subvortex_crossval.run()
+
+@app.get("/omegalist/")
+async def omega_list():
+    return await omegalabs_crossval.get_topic()
+
+@app.post("/omegalabs/")
+async def omegalabs(item: OmegalabsItem):
+    return await omegalabs_crossval.run(item)
 
 class ImageUpload(BaseModel):
     file: UploadFile = File(...)
@@ -202,3 +214,4 @@ audiogen_crossval = AudioGenCrossVal()
 llmdefender_crossval = LLMDefenderCrossVal()
 transcription_crossval = TranscriptionCrossVal()
 subvortex_crossval = SubvortexCrossVal()
+omegalabs_crossval = OmegalabsCrossVal()
