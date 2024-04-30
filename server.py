@@ -17,6 +17,7 @@ from crossvals.audiogen.audiogen import AudioGenCrossVal
 from crossvals.llm_defender.llm_defender import LLMDefenderCrossVal
 from crossvals.transcription.transcription import TranscriptionCrossVal
 from crossvals.subvortex.subvortex import SubvortexCrossVal
+from crossvals.bitagent.bitagent import BitagentCrossVal
 from crossvals.omegalabs.omegalabs import OmegalabsCrossVal
 
 from fastapi import UploadFile, File, HTTPException, Body
@@ -149,6 +150,10 @@ def transcription(item: TranscriptionItem):
 async def subvortex_calc():
     return await subvortex_crossval.run()
 
+@app.post("/bitagent/")
+def bitagent():
+    return bitagent_crossval.run()
+
 @app.get("/omegalist/")
 async def omega_list():
     return await omegalabs_crossval.get_topic()
@@ -214,4 +219,5 @@ audiogen_crossval = AudioGenCrossVal()
 llmdefender_crossval = LLMDefenderCrossVal()
 transcription_crossval = TranscriptionCrossVal()
 subvortex_crossval = SubvortexCrossVal()
+bitagent_crossval = BitagentCrossVal()
 omegalabs_crossval = OmegalabsCrossVal()
