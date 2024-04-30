@@ -18,6 +18,8 @@ from crossvals.llm_defender.llm_defender import LLMDefenderCrossVal
 from crossvals.transcription.transcription import TranscriptionCrossVal
 from crossvals.subvortex.subvortex import SubvortexCrossVal
 from crossvals.compute.compute import ComputeCrossVal
+from crossvals.bitagent.bitagent import BitagentCrossVal
+from crossvals.omegalabs.omegalabs import OmegalabsCrossVal
 
 from fastapi import UploadFile, File, HTTPException, Body
 import asyncio
@@ -93,6 +95,9 @@ class TranscriptionItem(BaseModel):
 class ComputeItem(BaseModel):
     difficulty: int
 
+class OmegalabsItem(BaseModel):
+    query: str
+
 @app.get("/")
 def read_root():
     return translate_crossval.run("Hello, how are you?")
@@ -153,6 +158,18 @@ async def subvortex_calc():
 async def compute(item: ComputeItem):
     return compute_crossval.run(item)
 
+@app.post("/bitagent/")
+def bitagent():
+    return bitagent_crossval.run()
+
+@app.get("/omegalist/")
+async def omega_list():
+    return await omegalabs_crossval.get_topic()
+
+@app.post("/omegalabs/")
+async def omegalabs(item: OmegalabsItem):
+    return await omegalabs_crossval.run(item)
+
 class ImageUpload(BaseModel):
     file: UploadFile = File(...)
 
@@ -211,3 +228,5 @@ llmdefender_crossval = LLMDefenderCrossVal()
 transcription_crossval = TranscriptionCrossVal()
 subvortex_crossval = SubvortexCrossVal()
 compute_crossval = ComputeCrossVal()
+bitagent_crossval = BitagentCrossVal()
+omegalabs_crossval = OmegalabsCrossVal()
