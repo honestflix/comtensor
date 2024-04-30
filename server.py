@@ -17,6 +17,7 @@ from crossvals.audiogen.audiogen import AudioGenCrossVal
 from crossvals.llm_defender.llm_defender import LLMDefenderCrossVal
 from crossvals.transcription.transcription import TranscriptionCrossVal
 from crossvals.subvortex.subvortex import SubvortexCrossVal
+from crossvals.snporacle.snporacle import SnporacleCrossVal
 from crossvals.compute.compute import ComputeCrossVal
 from crossvals.bitagent.bitagent import BitagentCrossVal
 from crossvals.omegalabs.omegalabs import OmegalabsCrossVal
@@ -154,6 +155,10 @@ def transcription(item: TranscriptionItem):
 async def subvortex_calc():
     return await subvortex_crossval.run()
 
+@app.post("/snporacle/")
+def snporacle():
+    return snporacle_crossval.run()
+
 @app.post("/compute/")
 async def compute(item: ComputeItem):
     return compute_crossval.run(item)
@@ -227,6 +232,7 @@ audiogen_crossval = AudioGenCrossVal()
 llmdefender_crossval = LLMDefenderCrossVal()
 transcription_crossval = TranscriptionCrossVal()
 subvortex_crossval = SubvortexCrossVal()
+snporacle_crossval = SnporacleCrossVal()
 compute_crossval = ComputeCrossVal()
 bitagent_crossval = BitagentCrossVal()
 omegalabs_crossval = OmegalabsCrossVal()
