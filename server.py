@@ -37,120 +37,120 @@ app.add_middleware(
 
 # healthcare_crossval.run_background_thread()
 
-# class TranlsateItem(BaseModel):
-#     text: str
-#     source_lang: str = "en"
-#     target_lang: str = "es"
-#     timeout: int = None
-# class TextPropmtItem(BaseModel):
-#     roles: list[str] = ["user", "assistant"]
-#     messages: list[str] = [
-#         "What's the weather like today?",
-#         "The weather is sunny with a high of 25 degrees.",
-#         "Could you set a reminder for me to take my umbrella tomorrow?",
-#         "Reminder set for tomorrow to take your umbrella.",
-#         "Thank you! What time is my first meeting tomorrow?",
-#         "Your first meeting tomorrow is at 9 AM.",
-#         "Can you play some music?",
-#         "Playing your favorite playlist now.",
-#         "How's the traffic to work?",
-#         "Traffic is light, it should take about 15 minutes to get to work."
-#     ]
+class TranlsateItem(BaseModel):
+    text: str
+    source_lang: str = "en"
+    target_lang: str = "es"
+    timeout: int = None
+class TextPropmtItem(BaseModel):
+    roles: list[str] = ["user", "assistant"]
+    messages: list[str] = [
+        "What's the weather like today?",
+        "The weather is sunny with a high of 25 degrees.",
+        "Could you set a reminder for me to take my umbrella tomorrow?",
+        "Reminder set for tomorrow to take your umbrella.",
+        "Thank you! What time is my first meeting tomorrow?",
+        "Your first meeting tomorrow is at 9 AM.",
+        "Can you play some music?",
+        "Playing your favorite playlist now.",
+        "How's the traffic to work?",
+        "Traffic is light, it should take about 15 minutes to get to work."
+    ]
 
-# class ImageItem(BaseModel):
-#     imageText: str
-# class SybilItem(BaseModel):
-#     sources: str
-#     query: str
+class ImageItem(BaseModel):
+    imageText: str
+class SybilItem(BaseModel):
+    sources: str
+    query: str
 
-# class OpenkaitoItem(BaseModel):
-#     query: str
+class OpenkaitoItem(BaseModel):
+    query: str
 
-# class ItsaiItem(BaseModel):
-#     texts: List[str]
+class ItsaiItem(BaseModel):
+    texts: List[str]
 
-# class NicheItem(BaseModel):
-#     model_name: str
-# class WomboItem(BaseModel):
-#     watermark: bool
-#     prompt: str
+class NicheItem(BaseModel):
+    model_name: str
+class WomboItem(BaseModel):
+    watermark: bool
+    prompt: str
 
-# class FractalItem(BaseModel):
-#     query: str
+class FractalItem(BaseModel):
+    query: str
 
-# class AudiogenItem(BaseModel):
-#     type: str
-#     prompt: str
+class AudiogenItem(BaseModel):
+    type: str
+    prompt: str
 
-# class LLMDefenderItem(BaseModel):
-#     analyzer: str
+class LLMDefenderItem(BaseModel):
+    analyzer: str
 
-# class TranscriptionItem(BaseModel):
-#     type: str
-#     audio_url: str
-#     audio_sample: bytes
+class TranscriptionItem(BaseModel):
+    type: str
+    audio_url: str
+    audio_sample: bytes
 
 class CortexItem(BaseModel):
     type: str
     provider: str
     prompt: str
 
-# @app.get("/")
-# def read_root():
-#     return translate_crossval.run("Hello, how are you?")
+@app.get("/")
+def read_root():
+    return translate_crossval.run("Hello, how are you?")
 
-# @app.post("/translate/", tags=["Testnet"])
-# def tranlsate_item(item: TranlsateItem):
+@app.post("/translate/", tags=["Testnet"])
+def tranlsate_item(item: TranlsateItem):
     
-#     translate_crossval.setLang(item.source_lang, item.target_lang)
-#     if item.timeout:
-#         translate_crossval.setTimeout(item.timeout)
-#     return translate_crossval.run(item.text)
+    translate_crossval.setLang(item.source_lang, item.target_lang)
+    if item.timeout:
+        translate_crossval.setTimeout(item.timeout)
+    return translate_crossval.run(item.text)
 
-# @app.post("/image-aichemy/", tags=["Mainnet"])
-# def image_generate(item: ImageItem):
-#     return imageaichemy_crossval.run(item.imageText)
+@app.post("/image-aichemy/", tags=["Mainnet"])
+def image_generate(item: ImageItem):
+    return imageaichemy_crossval.run(item.imageText)
 
-# @app.post("/sybil/", tags=["Mainnet"])
-# def sybil_search(item: SybilItem):
-#     return sybil_crossval.run({'sources': item.sources, 'query': item.query})
+@app.post("/sybil/", tags=["Mainnet"])
+def sybil_search(item: SybilItem):
+    return sybil_crossval.run({'sources': item.sources, 'query': item.query})
 
-# @app.post("/openkaito/", tags=["Mainnet"])
-# async def openkaito_search(item: OpenkaitoItem):
-#     return await openkaito_crossval.run(item.query)
+@app.post("/openkaito/", tags=["Mainnet"])
+async def openkaito_search(item: OpenkaitoItem):
+    return await openkaito_crossval.run(item.query)
 
-# @app.post("/itsai/", tags=["Mainnet"])
-# async def llm_detection(item: ItsaiItem):
-#     return await itsai_crossval.run(item.texts)
+@app.post("/itsai/", tags=["Mainnet"])
+async def llm_detection(item: ItsaiItem):
+    return await itsai_crossval.run(item.texts)
 
-# @app.post("/niche/", tags=["Mainnet"])
-# def niche_generation(item: NicheItem):
-#     return niche_crossval.run(item)
+@app.post("/niche/", tags=["Mainnet"])
+def niche_generation(item: NicheItem):
+    return niche_crossval.run(item)
 
-# @app.post("/wombo/", tags=["Mainnet"])
-# async def generate(item: WomboItem):
-#     print(item)
-#     return await wombo_crossval.run(ImageGenerationClientInputs(prompt=item.prompt, watermark=item.watermark))
+@app.post("/wombo/", tags=["Mainnet"])
+async def generate(item: WomboItem):
+    print(item)
+    return await wombo_crossval.run(ImageGenerationClientInputs(prompt=item.prompt, watermark=item.watermark))
 
-# @app.post("/fractal", tags=["Mainnet"])
-# def fractal_research(item: FractalItem):
-#     return fractal_crossval.run(item.query)
+@app.post("/fractal", tags=["Mainnet"])
+def fractal_research(item: FractalItem):
+    return fractal_crossval.run(item.query)
 
-# @app.post("/audiogen", tags=["Testnet"])
-# async def audio_generation(item: AudiogenItem):
-#     return await audiogen_crossval.run(item.type, item.prompt)
+@app.post("/audiogen", tags=["Testnet"])
+async def audio_generation(item: AudiogenItem):
+    return await audiogen_crossval.run(item.type, item.prompt)
 
-# @app.post("/llm-defender", tags=["Mainnet"])
-# def llm_defender(item: LLMDefenderItem):
-#     return llmdefender_crossval.run({"analyzer": item.analyzer})
+@app.post("/llm-defender", tags=["Mainnet"])
+def llm_defender(item: LLMDefenderItem):
+    return llmdefender_crossval.run({"analyzer": item.analyzer})
 
-# @app.post("/transcription/", tags=["Mainnet"])
-# def transcription(item: TranscriptionItem):
-#     return transcription_crossval.run({"type": item.type, "audio_url": item.audio_url, "audio_sample": item.audio_sample})
+@app.post("/transcription/", tags=["Mainnet"])
+def transcription(item: TranscriptionItem):
+    return transcription_crossval.run({"type": item.type, "audio_url": item.audio_url, "audio_sample": item.audio_sample})
 
-# @app.post("/subvortex/", tags=["Mainnet"])
-# async def subvortex_calc():
-#     return await subvortex_crossval.run()
+@app.post("/subvortex/", tags=["Mainnet"])
+async def subvortex_calc():
+    return await subvortex_crossval.run()
 
 @app.post("/cortex", tags=["Mainnet"])
 async def cortex_api(item: CortexItem):
@@ -168,22 +168,22 @@ class ImageUpload(BaseModel):
 #     result = healthcare_crossval.run(file_location)
 #     return {"result": result}
 
-# @app.post("/healthcare/", tags=["Testnet"])
-# async def upload_image(image: UploadFile = File(...)):
-#     try:
-#         # Save the file to disk or process it
-#         with open(f"{image.filename}", "wb") as buffer:
-#             shutil.copyfileobj(image.file, buffer)
-#             result = healthcare_crossval.run(image.filename)
-#             # print(result)     
-#         # You can process the file here, and then return a response
-#         return {"result": result}
-#     except Exception as e:
-#         raise HTTPException(status_code=500, detail=str(e))
+@app.post("/healthcare/", tags=["Testnet"])
+async def upload_image(image: UploadFile = File(...)):
+    try:
+        # Save the file to disk or process it
+        with open(f"{image.filename}", "wb") as buffer:
+            shutil.copyfileobj(image.file, buffer)
+            result = healthcare_crossval.run(image.filename)
+            # print(result)     
+        # You can process the file here, and then return a response
+        return {"result": result}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
-# @app.post("/text-prompting/", tags=["Mainnet"])
-# def text_prompting(item: TextPropmtItem):
-#     return textpromtingCrossval.run(item.roles, item.messages)
+@app.post("/text-prompting/", tags=["Mainnet"])
+def text_prompting(item: TextPropmtItem):
+    return textpromtingCrossval.run(item.roles, item.messages)
 
 # @app.websocket("/textprompting")
 # async def text_prompting(websocket: WebSocket):
@@ -199,18 +199,18 @@ class ImageUpload(BaseModel):
 #         await asyncio.sleep(1)
 
 
-# translate_crossval = TranslateCrossValidator()
-# healthcare_crossval = HealthcareCrossval(netuid = 31, topk = 1)
-# textpromtingCrossval = TextPromtingCrossValidator()
-# imageaichemy_crossval = ImageAIchemyCrossVal()
-# sybil_crossval = SybilCrossVal()
-# openkaito_crossval = OpenkaitoCrossVal()
-# itsai_crossval = ItsaiCrossVal()
-# niche_crossval = NicheCrossVal()
-# wombo_crossval = WomboCrossVal()
-# fractal_crossval = FractalCrossVal()
-# audiogen_crossval = AudioGenCrossVal()
-# llmdefender_crossval = LLMDefenderCrossVal()
-# transcription_crossval = TranscriptionCrossVal()
-# subvortex_crossval = SubvortexCrossVal()
+translate_crossval = TranslateCrossValidator()
+healthcare_crossval = HealthcareCrossval(netuid = 31, topk = 1)
+textpromtingCrossval = TextPromtingCrossValidator()
+imageaichemy_crossval = ImageAIchemyCrossVal()
+sybil_crossval = SybilCrossVal()
+openkaito_crossval = OpenkaitoCrossVal()
+itsai_crossval = ItsaiCrossVal()
+niche_crossval = NicheCrossVal()
+wombo_crossval = WomboCrossVal()
+fractal_crossval = FractalCrossVal()
+audiogen_crossval = AudioGenCrossVal()
+llmdefender_crossval = LLMDefenderCrossVal()
+transcription_crossval = TranscriptionCrossVal()
+subvortex_crossval = SubvortexCrossVal()
 cortex_crossval = CortexCrossVal()
