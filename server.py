@@ -17,6 +17,7 @@ from crossvals.audiogen.audiogen import AudioGenCrossVal
 from crossvals.llm_defender.llm_defender import LLMDefenderCrossVal
 from crossvals.transcription.transcription import TranscriptionCrossVal
 from crossvals.subvortex.subvortex import SubvortexCrossVal
+from crossvals.cortex.cortex import CortexCrossVal
 from crossvals.snporacle.snporacle import SnporacleCrossVal
 from crossvals.compute.compute import ComputeCrossVal
 from crossvals.bitagent.bitagent import BitagentCrossVal
@@ -93,6 +94,11 @@ class TranscriptionItem(BaseModel):
     audio_url: str
     audio_sample: bytes
 
+class CortexItem(BaseModel):
+    type: str
+    provider: str
+    prompt: str
+
 class ComputeItem(BaseModel):
     difficulty: int
 
@@ -103,7 +109,7 @@ class OmegalabsItem(BaseModel):
 def read_root():
     return translate_crossval.run("Hello, how are you?")
 
-@app.post("/translate/")
+@app.post("/translate/", tags=["Testnet"])
 def tranlsate_item(item: TranlsateItem):
     
     translate_crossval.setLang(item.source_lang, item.target_lang)
@@ -111,49 +117,54 @@ def tranlsate_item(item: TranlsateItem):
         translate_crossval.setTimeout(item.timeout)
     return translate_crossval.run(item.text)
 
-@app.post("/image-aichemy/")
+@app.post("/image-aichemy/", tags=["Mainnet"])
 def image_generate(item: ImageItem):
     return imageaichemy_crossval.run(item.imageText)
 
-@app.post("/sybil/")
+@app.post("/sybil/", tags=["Mainnet"])
 def sybil_search(item: SybilItem):
     return sybil_crossval.run({'sources': item.sources, 'query': item.query})
 
-@app.post("/openkaito/")
+@app.post("/openkaito/", tags=["Mainnet"])
 async def openkaito_search(item: OpenkaitoItem):
     return await openkaito_crossval.run(item.query)
 
-@app.post("/itsai/")
+@app.post("/itsai/", tags=["Mainnet"])
 async def llm_detection(item: ItsaiItem):
     return await itsai_crossval.run(item.texts)
 
-@app.post("/niche/")
+@app.post("/niche/", tags=["Mainnet"])
 def niche_generation(item: NicheItem):
     return niche_crossval.run(item)
-@app.post("/wombo/")
+
+@app.post("/wombo/", tags=["Mainnet"])
 async def generate(item: WomboItem):
     print(item)
     return await wombo_crossval.run(ImageGenerationClientInputs(prompt=item.prompt, watermark=item.watermark))
 
-@app.post("/fractal")
+@app.post("/fractal", tags=["Mainnet"])
 def fractal_research(item: FractalItem):
     return fractal_crossval.run(item.query)
 
-@app.post("/audiogen")
+@app.post("/audiogen", tags=["Testnet"])
 async def audio_generation(item: AudiogenItem):
     return await audiogen_crossval.run(item.type, item.prompt)
 
-@app.post("/llm-defender")
+@app.post("/llm-defender", tags=["Mainnet"])
 def llm_defender(item: LLMDefenderItem):
     return llmdefender_crossval.run({"analyzer": item.analyzer})
 
-@app.post("/transcription/")
+@app.post("/transcription/", tags=["Mainnet"])
 def transcription(item: TranscriptionItem):
     return transcription_crossval.run({"type": item.type, "audio_url": item.audio_url, "audio_sample": item.audio_sample})
 
-@app.post("/subvortex/")
+@app.post("/subvortex/", tags=["Mainnet"])
 async def subvortex_calc():
     return await subvortex_crossval.run()
+
+@app.post("/cortex", tags=["Mainnet"])
+async def cortex_api(item: CortexItem):
+    return await cortex_crossval.run(item)
 
 @app.post("/snporacle/")
 def snporacle():
@@ -187,7 +198,7 @@ class ImageUpload(BaseModel):
 #     result = healthcare_crossval.run(file_location)
 #     return {"result": result}
 
-@app.post("/healthcare/")
+@app.post("/healthcare/", tags=["Testnet"])
 async def upload_image(image: UploadFile = File(...)):
     try:
         # Save the file to disk or process it
@@ -200,7 +211,7 @@ async def upload_image(image: UploadFile = File(...)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.post("/text-prompting/")
+@app.post("/text-prompting/", tags=["Mainnet"])
 def text_prompting(item: TextPropmtItem):
     return textpromtingCrossval.run(item.roles, item.messages)
 
@@ -232,6 +243,7 @@ audiogen_crossval = AudioGenCrossVal()
 llmdefender_crossval = LLMDefenderCrossVal()
 transcription_crossval = TranscriptionCrossVal()
 subvortex_crossval = SubvortexCrossVal()
+cortex_crossval = CortexCrossVal()
 snporacle_crossval = SnporacleCrossVal()
 compute_crossval = ComputeCrossVal()
 bitagent_crossval = BitagentCrossVal()
