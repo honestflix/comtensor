@@ -1,6 +1,8 @@
 import shutil
 from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
+from typing import Optional
+import bittensor as bt
 
 from crossvals.translate.translate import TranslateCrossValidator
 from crossvals.healthcare.healthcare import HealthcareCrossval
@@ -22,6 +24,7 @@ from crossvals.snporacle.snporacle import SnporacleCrossVal
 from crossvals.compute.compute import ComputeCrossVal
 from crossvals.bitagent.bitagent import BitagentCrossVal
 from crossvals.omegalabs.omegalabs import OmegalabsCrossVal
+from crossvals.vision.vision import VisionCrossVal
 
 from fastapi import UploadFile, File, HTTPException, Body
 import asyncio
@@ -105,6 +108,13 @@ class ComputeItem(BaseModel):
 class OmegalabsItem(BaseModel):
     query: str
 
+class VisionItem(BaseModel):
+    type: str
+    prompt: str
+    width: Optional[int] = 1024
+    height: Optional[int] = 1024
+    init_image: Optional[str] = ''
+
 @app.get("/")
 def read_root():
     return translate_crossval.run("Hello, how are you?")
@@ -186,6 +196,10 @@ async def omega_list():
 async def omegalabs(item: OmegalabsItem):
     return await omegalabs_crossval.run(item)
 
+@app.post("/vision/")
+async def vision(item: VisionItem):
+    return await vision_crossval.run(item)
+
 class ImageUpload(BaseModel):
     file: UploadFile = File(...)
 
@@ -228,23 +242,24 @@ def text_prompting(item: TextPropmtItem):
 #         print(data)
 #         await asyncio.sleep(1)
 
+subtensor = bt.subtensor(network = "local")
 
-translate_crossval = TranslateCrossValidator()
-healthcare_crossval = HealthcareCrossval(netuid = 31, topk = 1)
-textpromtingCrossval = TextPromtingCrossValidator()
-imageaichemy_crossval = ImageAIchemyCrossVal()
-sybil_crossval = SybilCrossVal()
-openkaito_crossval = OpenkaitoCrossVal()
-itsai_crossval = ItsaiCrossVal()
-niche_crossval = NicheCrossVal()
-wombo_crossval = WomboCrossVal()
-fractal_crossval = FractalCrossVal()
-audiogen_crossval = AudioGenCrossVal()
-llmdefender_crossval = LLMDefenderCrossVal()
-transcription_crossval = TranscriptionCrossVal()
-subvortex_crossval = SubvortexCrossVal()
-cortex_crossval = CortexCrossVal()
-snporacle_crossval = SnporacleCrossVal()
-compute_crossval = ComputeCrossVal()
-bitagent_crossval = BitagentCrossVal()
-omegalabs_crossval = OmegalabsCrossVal()
+translate_crossval = TranslateCrossValidator(subtensor=subtensor)
+healthcare_crossval = HealthcareCrossval(netuid = 31, topk = 1, subtensor=subtensor)
+textpromtingCrossval = TextPromtingCrossValidator(subtensor=subtensor)
+imageaichemy_crossval = ImageAIchemyCrossVal(subtensor=subtensor)
+sybil_crossval = SybilCrossVal(subtensor=subtensor)
+openkaito_crossval = OpenkaitoCrossVal(subtensor=subtensor)
+itsai_crossval = ItsaiCrossVal(subtensor=subtensor)
+niche_crossval = NicheCrossVal(subtensor=subtensor)
+wombo_crossval = WomboCrossVal(subtensor=subtensor)
+fractal_crossval = FractalCrossVal(subtensor=subtensor)
+audiogen_crossval = AudioGenCrossVal(subtensor=subtensor)
+llmdefender_crossval = LLMDefenderCrossVal(subtensor=subtensor)
+transcription_crossval = TranscriptionCrossVal(subtensor=subtensor)
+subvortex_crossval = SubvortexCrossVal(subtensor=subtensor)
+snporacle_crossval = SnporacleCrossVal(subtensor=subtensor)
+compute_crossval = ComputeCrossVal(subtensor=subtensor)
+bitagent_crossval = BitagentCrossVal(subtensor=subtensor)
+omegalabs_crossval = OmegalabsCrossVal(subtensor=subtensor)
+vision_crossval = VisionCrossVal(subtensor=subtensor)

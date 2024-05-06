@@ -11,8 +11,8 @@ class Translate(bt.Synapse):
     target_lang: str = pydantic.Field(..., allow_mutation=False)
     required_hash_fields: list[str] = pydantic.Field(  ["source_texts", "source_lang", "target_lang"], allow_mutation = False)
 class TranslateCrossValidator(SynapseBasedCrossval):
-    def __init__(self, netuid = 2, wallet_name = 'default', wallet_hotkey = 'default', network = "finney", topk = 1):
-        super().__init__(netuid, wallet_name, wallet_hotkey, network, topk)
+    def __init__(self, netuid = 2, wallet_name = 'default', wallet_hotkey = 'default', network = "finney", topk = 1, subtensor = None):
+        super().__init__(netuid, wallet_name, wallet_hotkey, network, topk, subtensor)
         print([item['uid'] for item in self.top_miners])
         self.dendrite = bt.dendrite( wallet = self.wallet )
         self.source_lang = "en"

@@ -5,8 +5,8 @@ from aiohttp import ClientSession
 
 class OmegalabsCrossVal(SynapseBasedCrossval):
     
-    def __init__(self, netuid = 24, wallet_name = 'default', wallet_hotkey = 'default', network = "finney", topk = 1):
-        super().__init__(netuid, wallet_name, wallet_hotkey, network, topk)
+    def __init__(self, netuid = 24, wallet_name = 'default', wallet_hotkey = 'default', network = "finney", topk = 1, subtensor = None):
+        super().__init__(netuid, wallet_name, wallet_hotkey, network, topk, subtensor)
         api_root = (
             "https://dev-validator.api.omega-labs.ai"
             if network == "test" else
