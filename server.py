@@ -176,27 +176,27 @@ async def subvortex_calc():
 async def cortex_api(item: CortexItem):
     return await cortex_crossval.run(item)
 
-@app.post("/snporacle/")
+@app.post("/snporacle/", tags=["Mainnet"])
 def snporacle():
     return snporacle_crossval.run()
 
-@app.post("/compute/")
+@app.post("/compute/", tags=["Mainnet"])
 async def compute(item: ComputeItem):
     return compute_crossval.run(item)
 
-@app.post("/bitagent/")
+@app.post("/bitagent/", tags=["Mainnet"])
 def bitagent():
     return bitagent_crossval.run()
 
-@app.get("/omegalist/")
+@app.get("/omegalist/", tags=["Mainnet"])
 async def omega_list():
     return await omegalabs_crossval.get_topic()
 
-@app.post("/omegalabs/")
+@app.post("/omegalabs/", tags=["Mainnet"])
 async def omegalabs(item: OmegalabsItem):
     return await omegalabs_crossval.run(item)
 
-@app.post("/vision/")
+@app.post("/vision/", tags=["Mainnet"])
 async def vision(item: VisionItem):
     return await vision_crossval.run(item)
 
@@ -262,4 +262,5 @@ snporacle_crossval = SnporacleCrossVal(subtensor=subtensor)
 compute_crossval = ComputeCrossVal(subtensor=subtensor)
 bitagent_crossval = BitagentCrossVal(subtensor=subtensor)
 omegalabs_crossval = OmegalabsCrossVal(subtensor=subtensor)
+cortex_crossval = CortexCrossVal(subtensor=subtensor)
 vision_crossval = VisionCrossVal(subtensor=subtensor)

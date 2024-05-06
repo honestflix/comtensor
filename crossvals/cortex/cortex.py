@@ -5,8 +5,8 @@ import random
 
 class CortexCrossVal(SynapseBasedCrossval):
     
-    def __init__(self, netuid = 18, wallet_name = 'default', wallet_hotkey = 'default', network = "finney", topk = 1):
-        super().__init__(netuid, wallet_name, wallet_hotkey, network, topk)
+    def __init__(self, netuid = 18, wallet_name = 'default', wallet_hotkey = 'default', network = "finney", topk = 1, subtensor = None):
+        super().__init__(netuid, wallet_name, wallet_hotkey, network, topk, subtensor)
         self.dendrite = bt.dendrite( wallet = self.wallet )
         self.max_tokens = 4096
         self.model = "gpt-4-turbo-2024-04-09"
