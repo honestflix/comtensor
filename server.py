@@ -1,6 +1,8 @@
 import shutil
 from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
+from typing import Optional
+import bittensor as bt
 
 from crossvals.translate.translate import TranslateCrossValidator
 from crossvals.healthcare.healthcare import HealthcareCrossval
@@ -21,6 +23,7 @@ from crossvals.snporacle.snporacle import SnporacleCrossVal
 from crossvals.compute.compute import ComputeCrossVal
 from crossvals.bitagent.bitagent import BitagentCrossVal
 from crossvals.omegalabs.omegalabs import OmegalabsCrossVal
+from crossvals.vision.vision import VisionCrossVal
 
 from fastapi import UploadFile, File, HTTPException, Body
 import asyncio
@@ -99,81 +102,92 @@ class ComputeItem(BaseModel):
 class OmegalabsItem(BaseModel):
     query: str
 
-@app.get("/")
-def read_root():
-    return translate_crossval.run("Hello, how are you?")
+class VisionItem(BaseModel):
+    type: str
+    prompt: str
+    width: Optional[int] = 1024
+    height: Optional[int] = 1024
+    init_image: Optional[str] = ''
 
-@app.post("/translate/")
-def tranlsate_item(item: TranlsateItem):
+# @app.get("/")
+# def read_root():
+#     return translate_crossval.run("Hello, how are you?")
+
+# @app.post("/translate/")
+# def tranlsate_item(item: TranlsateItem):
     
-    translate_crossval.setLang(item.source_lang, item.target_lang)
-    if item.timeout:
-        translate_crossval.setTimeout(item.timeout)
-    return translate_crossval.run(item.text)
+#     translate_crossval.setLang(item.source_lang, item.target_lang)
+#     if item.timeout:
+#         translate_crossval.setTimeout(item.timeout)
+#     return translate_crossval.run(item.text)
 
 @app.post("/image-aichemy/")
 def image_generate(item: ImageItem):
     return imageaichemy_crossval.run(item.imageText)
 
-@app.post("/sybil/")
-def sybil_search(item: SybilItem):
-    return sybil_crossval.run({'sources': item.sources, 'query': item.query})
+# @app.post("/sybil/")
+# def sybil_search(item: SybilItem):
+#     return sybil_crossval.run({'sources': item.sources, 'query': item.query})
 
-@app.post("/openkaito/")
-async def openkaito_search(item: OpenkaitoItem):
-    return await openkaito_crossval.run(item.query)
+# @app.post("/openkaito/")
+# async def openkaito_search(item: OpenkaitoItem):
+#     return await openkaito_crossval.run(item.query)
 
-@app.post("/itsai/")
-async def llm_detection(item: ItsaiItem):
-    return await itsai_crossval.run(item.texts)
+# @app.post("/itsai/")
+# async def llm_detection(item: ItsaiItem):
+#     return await itsai_crossval.run(item.texts)
 
-@app.post("/niche/")
-def niche_generation(item: NicheItem):
-    return niche_crossval.run(item)
-@app.post("/wombo/")
-async def generate(item: WomboItem):
-    print(item)
-    return await wombo_crossval.run(ImageGenerationClientInputs(prompt=item.prompt, watermark=item.watermark))
+# @app.post("/niche/")
+# def niche_generation(item: NicheItem):
+#     return niche_crossval.run(item)
+# @app.post("/wombo/")
+# async def generate(item: WomboItem):
+#     print(item)
+#     return await wombo_crossval.run(ImageGenerationClientInputs(prompt=item.prompt, watermark=item.watermark))
 
-@app.post("/fractal")
-def fractal_research(item: FractalItem):
-    return fractal_crossval.run(item.query)
+# @app.post("/fractal")
+# def fractal_research(item: FractalItem):
+#     return fractal_crossval.run(item.query)
 
-@app.post("/audiogen")
-async def audio_generation(item: AudiogenItem):
-    return await audiogen_crossval.run(item.type, item.prompt)
+# @app.post("/audiogen")
+# async def audio_generation(item: AudiogenItem):
+#     return await audiogen_crossval.run(item.type, item.prompt)
 
-@app.post("/llm-defender")
-def llm_defender(item: LLMDefenderItem):
-    return llmdefender_crossval.run({"analyzer": item.analyzer})
+# @app.post("/llm-defender")
+# def llm_defender(item: LLMDefenderItem):
+#     return llmdefender_crossval.run({"analyzer": item.analyzer})
 
-@app.post("/transcription/")
-def transcription(item: TranscriptionItem):
-    return transcription_crossval.run({"type": item.type, "audio_url": item.audio_url, "audio_sample": item.audio_sample})
+# @app.post("/transcription/")
+# def transcription(item: TranscriptionItem):
+#     return transcription_crossval.run({"type": item.type, "audio_url": item.audio_url, "audio_sample": item.audio_sample})
 
-@app.post("/subvortex/")
-async def subvortex_calc():
-    return await subvortex_crossval.run()
+# @app.post("/subvortex/")
+# async def subvortex_calc():
+#     return await subvortex_crossval.run()
 
-@app.post("/snporacle/")
-def snporacle():
-    return snporacle_crossval.run()
+# @app.post("/snporacle/")
+# def snporacle():
+#     return snporacle_crossval.run()
 
-@app.post("/compute/")
-async def compute(item: ComputeItem):
-    return compute_crossval.run(item)
+# @app.post("/compute/")
+# async def compute(item: ComputeItem):
+#     return compute_crossval.run(item)
 
-@app.post("/bitagent/")
-def bitagent():
-    return bitagent_crossval.run()
+# @app.post("/bitagent/")
+# def bitagent():
+#     return bitagent_crossval.run()
 
-@app.get("/omegalist/")
-async def omega_list():
-    return await omegalabs_crossval.get_topic()
+# @app.get("/omegalist/")
+# async def omega_list():
+#     return await omegalabs_crossval.get_topic()
 
-@app.post("/omegalabs/")
-async def omegalabs(item: OmegalabsItem):
-    return await omegalabs_crossval.run(item)
+# @app.post("/omegalabs/")
+# async def omegalabs(item: OmegalabsItem):
+#     return await omegalabs_crossval.run(item)
+
+@app.post("/vision/")
+async def vision(item: VisionItem):
+    return await vision_crossval.run(item)
 
 class ImageUpload(BaseModel):
     file: UploadFile = File(...)
@@ -187,22 +201,22 @@ class ImageUpload(BaseModel):
 #     result = healthcare_crossval.run(file_location)
 #     return {"result": result}
 
-@app.post("/healthcare/")
-async def upload_image(image: UploadFile = File(...)):
-    try:
-        # Save the file to disk or process it
-        with open(f"{image.filename}", "wb") as buffer:
-            shutil.copyfileobj(image.file, buffer)
-            result = healthcare_crossval.run(image.filename)
-            # print(result)     
-        # You can process the file here, and then return a response
-        return {"result": result}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+# @app.post("/healthcare/")
+# async def upload_image(image: UploadFile = File(...)):
+#     try:
+#         # Save the file to disk or process it
+#         with open(f"{image.filename}", "wb") as buffer:
+#             shutil.copyfileobj(image.file, buffer)
+#             result = healthcare_crossval.run(image.filename)
+#             # print(result)     
+#         # You can process the file here, and then return a response
+#         return {"result": result}
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=str(e))
 
-@app.post("/text-prompting/")
-def text_prompting(item: TextPropmtItem):
-    return textpromtingCrossval.run(item.roles, item.messages)
+# @app.post("/text-prompting/")
+# def text_prompting(item: TextPropmtItem):
+#     return textpromtingCrossval.run(item.roles, item.messages)
 
 # @app.websocket("/textprompting")
 # async def text_prompting(websocket: WebSocket):
@@ -217,22 +231,24 @@ def text_prompting(item: TextPropmtItem):
 #         print(data)
 #         await asyncio.sleep(1)
 
+subtensor = bt.subtensor(network = "local")
 
-translate_crossval = TranslateCrossValidator()
-healthcare_crossval = HealthcareCrossval(netuid = 31, topk = 1)
-textpromtingCrossval = TextPromtingCrossValidator()
-imageaichemy_crossval = ImageAIchemyCrossVal()
-sybil_crossval = SybilCrossVal()
-openkaito_crossval = OpenkaitoCrossVal()
-itsai_crossval = ItsaiCrossVal()
-niche_crossval = NicheCrossVal()
-wombo_crossval = WomboCrossVal()
-fractal_crossval = FractalCrossVal()
-audiogen_crossval = AudioGenCrossVal()
-llmdefender_crossval = LLMDefenderCrossVal()
-transcription_crossval = TranscriptionCrossVal()
-subvortex_crossval = SubvortexCrossVal()
-snporacle_crossval = SnporacleCrossVal()
-compute_crossval = ComputeCrossVal()
-bitagent_crossval = BitagentCrossVal()
-omegalabs_crossval = OmegalabsCrossVal()
+translate_crossval = TranslateCrossValidator(subtensor=subtensor)
+healthcare_crossval = HealthcareCrossval(netuid = 31, topk = 1, subtensor=subtensor)
+textpromtingCrossval = TextPromtingCrossValidator(subtensor=subtensor)
+imageaichemy_crossval = ImageAIchemyCrossVal(subtensor=subtensor)
+sybil_crossval = SybilCrossVal(subtensor=subtensor)
+openkaito_crossval = OpenkaitoCrossVal(subtensor=subtensor)
+itsai_crossval = ItsaiCrossVal(subtensor=subtensor)
+niche_crossval = NicheCrossVal(subtensor=subtensor)
+wombo_crossval = WomboCrossVal(subtensor=subtensor)
+fractal_crossval = FractalCrossVal(subtensor=subtensor)
+audiogen_crossval = AudioGenCrossVal(subtensor=subtensor)
+llmdefender_crossval = LLMDefenderCrossVal(subtensor=subtensor)
+transcription_crossval = TranscriptionCrossVal(subtensor=subtensor)
+subvortex_crossval = SubvortexCrossVal(subtensor=subtensor)
+snporacle_crossval = SnporacleCrossVal(subtensor=subtensor)
+compute_crossval = ComputeCrossVal(subtensor=subtensor)
+bitagent_crossval = BitagentCrossVal(subtensor=subtensor)
+omegalabs_crossval = OmegalabsCrossVal(subtensor=subtensor)
+vision_crossval = VisionCrossVal(subtensor=subtensor)

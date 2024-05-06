@@ -22,8 +22,8 @@ from crossvals.subvortex.score import (
 
 class SubvortexCrossVal(SynapseBasedCrossval):
     
-    def __init__(self, netuid = 7, wallet_name = 'default', wallet_hotkey = 'default', network = "finney", topk = 1):
-        super().__init__(netuid, wallet_name, wallet_hotkey, network, topk)
+    def __init__(self, netuid = 7, wallet_name = 'default', wallet_hotkey = 'default', network = "finney", topk = 1, subtensor = None):
+        super().__init__(netuid, wallet_name, wallet_hotkey, network, topk, subtensor)
         self.dendrite = bt.dendrite( wallet = self.wallet )
         self.country = get_country(self.dendrite.external_ip)
         
