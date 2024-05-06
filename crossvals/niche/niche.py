@@ -156,8 +156,8 @@ def initialize_challenge_urls():
 
 class NicheCrossVal(SynapseBasedCrossval):
     
-    def __init__(self, netuid = 23, wallet_name = 'default', wallet_hotkey = 'default', network = "finney", topk = 1):
-        super().__init__(netuid, wallet_name, wallet_hotkey, network, topk)
+    def __init__(self, netuid = 23, wallet_name = 'default', wallet_hotkey = 'default', network = "finney", topk = 1, subtensor = None):
+        super().__init__(netuid, wallet_name, wallet_hotkey, network, topk, subtensor)
         self.dendrite = bt.dendrite( wallet = self.wallet )
         self.nicheimage_catalogue = initialize_nicheimage_catalogue()
         self.challenge_urls = initialize_challenge_urls()

@@ -28,7 +28,7 @@ class CommitBasedCrossval(BaseCrossval):
         return last_commit
 
 if __name__ == "__main__":
-    subtensor = bt.subtensor(network = "finney")
+    subtensor = bt.subtensor(network = "local")
     partial = functools.partial(subtensor.get_commitment, 3, 175)
     latest_commit = run_in_subprocess(partial, 30)
     print(latest_commit)
