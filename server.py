@@ -25,6 +25,7 @@ from crossvals.compute.compute import ComputeCrossVal
 from crossvals.bitagent.bitagent import BitagentCrossVal
 from crossvals.omegalabs.omegalabs import OmegalabsCrossVal
 from crossvals.vision.vision import VisionCrossVal
+from crossvals.omron.omron import OmronCrossVal
 
 from fastapi import UploadFile, File, HTTPException, Body
 import asyncio
@@ -200,6 +201,10 @@ async def omegalabs(item: OmegalabsItem):
 async def vision(item: VisionItem):
     return await vision_crossval.run(item)
 
+@app.post("/omron/", tags=["Mainnet"])
+def omron_func():
+    return omron_crossval.run()
+
 class ImageUpload(BaseModel):
     file: UploadFile = File(...)
 
@@ -264,3 +269,4 @@ bitagent_crossval = BitagentCrossVal(subtensor=subtensor)
 omegalabs_crossval = OmegalabsCrossVal(subtensor=subtensor)
 cortex_crossval = CortexCrossVal(subtensor=subtensor)
 vision_crossval = VisionCrossVal(subtensor=subtensor)
+omron_crossval = OmronCrossVal(subtensor=subtensor)
