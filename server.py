@@ -7,7 +7,7 @@ import bittensor as bt
 from crossvals.translate.translate import TranslateCrossValidator
 from crossvals.healthcare.healthcare import HealthcareCrossval
 from crossvals.textprompting.text import TextPromtingCrossValidator
-from crossvals.image_aichemy.aichemy import ImageAIchemyCrossVal
+from crossvals.image_alchemy.alchemy import ImageAlchemyCrossVal
 from crossvals.sybil.sybil import SybilCrossVal
 from crossvals.openkaito.openkaito import OpenkaitoCrossVal
 from crossvals.itsai.itsai import ItsaiCrossVal
@@ -79,6 +79,8 @@ class ItsaiItem(BaseModel):
 
 class NicheItem(BaseModel):
     model_name: str
+    prompt: str
+
 class WomboItem(BaseModel):
     watermark: bool
     prompt: str
@@ -128,9 +130,9 @@ def tranlsate_item(item: TranlsateItem):
         translate_crossval.setTimeout(item.timeout)
     return translate_crossval.run(item.text)
 
-@app.post("/image-aichemy/", tags=["Mainnet"])
+@app.post("/image-alchemy/", tags=["Mainnet"])
 def image_generate(item: ImageItem):
-    return imageaichemy_crossval.run(item.imageText)
+    return imagealchemy_crossval.run(item.imageText)
 
 @app.post("/sybil/", tags=["Mainnet"])
 def sybil_search(item: SybilItem):
@@ -252,7 +254,7 @@ subtensor = bt.subtensor(network = "local")
 translate_crossval = TranslateCrossValidator(subtensor=subtensor)
 healthcare_crossval = HealthcareCrossval(netuid = 31, topk = 1, subtensor=subtensor)
 textpromtingCrossval = TextPromtingCrossValidator(subtensor=subtensor)
-imageaichemy_crossval = ImageAIchemyCrossVal(subtensor=subtensor)
+imagealchemy_crossval = ImageAlchemyCrossVal(subtensor=subtensor)
 sybil_crossval = SybilCrossVal(subtensor=subtensor)
 openkaito_crossval = OpenkaitoCrossVal(subtensor=subtensor)
 itsai_crossval = ItsaiCrossVal(subtensor=subtensor)

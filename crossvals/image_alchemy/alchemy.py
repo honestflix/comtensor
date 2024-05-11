@@ -1,10 +1,10 @@
 import bittensor as bt
 from base.synapse_based_crossval import SynapseBasedCrossval
-from crossvals.image_aichemy.protocol import ImageGeneration
+from crossvals.image_alchemy.protocol import ImageGeneration
 import typing
 
 
-class ImageAIchemyCrossVal(SynapseBasedCrossval):
+class ImageAlchemyCrossVal(SynapseBasedCrossval):
 
     def __init__(self, netuid = 26, wallet_name = 'default', wallet_hotkey = 'default', network = "finney", topk = 1, subtensor = None):
         super().__init__(netuid, wallet_name, wallet_hotkey, network, topk, subtensor)
