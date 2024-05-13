@@ -7,7 +7,7 @@ import bittensor as bt
 from crossvals.translate.translate import TranslateCrossValidator
 from crossvals.healthcare.healthcare import HealthcareCrossval
 from crossvals.textprompting.text import TextPromtingCrossValidator
-from crossvals.image_aichemy.aichemy import ImageAIchemyCrossVal
+from crossvals.image_alchemy.alchemy import ImageAlchemyCrossVal
 from crossvals.sybil.sybil import SybilCrossVal
 from crossvals.openkaito.openkaito import OpenkaitoCrossVal
 from crossvals.itsai.itsai import ItsaiCrossVal
@@ -25,6 +25,7 @@ from crossvals.compute.compute import ComputeCrossVal
 from crossvals.bitagent.bitagent import BitagentCrossVal
 from crossvals.omegalabs.omegalabs import OmegalabsCrossVal
 from crossvals.vision.vision import VisionCrossVal
+from crossvals.omron.omron import OmronCrossVal
 
 from fastapi import UploadFile, File, HTTPException, Body
 import asyncio
@@ -78,6 +79,8 @@ class ItsaiItem(BaseModel):
 
 class NicheItem(BaseModel):
     model_name: str
+    prompt: str
+
 class WomboItem(BaseModel):
     watermark: bool
     prompt: str
@@ -127,9 +130,9 @@ def tranlsate_item(item: TranlsateItem):
         translate_crossval.setTimeout(item.timeout)
     return translate_crossval.run(item.text)
 
-@app.post("/image-aichemy/", tags=["Mainnet"])
+@app.post("/image-alchemy/", tags=["Mainnet"])
 def image_generate(item: ImageItem):
-    return imageaichemy_crossval.run(item.imageText)
+    return imagealchemy_crossval.run(item.imageText)
 
 @app.post("/sybil/", tags=["Mainnet"])
 def sybil_search(item: SybilItem):
@@ -200,6 +203,10 @@ async def omegalabs(item: OmegalabsItem):
 async def vision(item: VisionItem):
     return await vision_crossval.run(item)
 
+@app.post("/omron/", tags=["Mainnet"])
+def omron_func():
+    return omron_crossval.run()
+
 class ImageUpload(BaseModel):
     file: UploadFile = File(...)
 
@@ -247,7 +254,7 @@ subtensor = bt.subtensor(network = "local")
 translate_crossval = TranslateCrossValidator(subtensor=subtensor)
 healthcare_crossval = HealthcareCrossval(netuid = 31, topk = 1, subtensor=subtensor)
 textpromtingCrossval = TextPromtingCrossValidator(subtensor=subtensor)
-imageaichemy_crossval = ImageAIchemyCrossVal(subtensor=subtensor)
+imagealchemy_crossval = ImageAlchemyCrossVal(subtensor=subtensor)
 sybil_crossval = SybilCrossVal(subtensor=subtensor)
 openkaito_crossval = OpenkaitoCrossVal(subtensor=subtensor)
 itsai_crossval = ItsaiCrossVal(subtensor=subtensor)
@@ -264,3 +271,4 @@ bitagent_crossval = BitagentCrossVal(subtensor=subtensor)
 omegalabs_crossval = OmegalabsCrossVal(subtensor=subtensor)
 cortex_crossval = CortexCrossVal(subtensor=subtensor)
 vision_crossval = VisionCrossVal(subtensor=subtensor)
+omron_crossval = OmronCrossVal(subtensor=subtensor)

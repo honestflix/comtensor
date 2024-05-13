@@ -6,7 +6,7 @@ import traceback
 
 
 MODEL_CONFIG = yaml.load(
-    open("crossvals/niche/model_config.yaml"), yaml.FullLoader
+    open("./crossvals/niche/model_config.yaml"), yaml.FullLoader
 )
 
 
