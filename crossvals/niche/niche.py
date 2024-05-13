@@ -156,8 +156,8 @@ def initialize_challenge_urls():
 
 class NicheCrossVal(SynapseBasedCrossval):
     
-    def __init__(self, netuid = 23, wallet_name = 'default', wallet_hotkey = 'default', network = "finney", topk = 1):
-        super().__init__(netuid, wallet_name, wallet_hotkey, network, topk)
+    def __init__(self, netuid = 23, wallet_name = 'default', wallet_hotkey = 'default', network = "finney", topk = 1, subtensor = None):
+        super().__init__(netuid, wallet_name, wallet_hotkey, network, topk, subtensor)
         self.dendrite = bt.dendrite( wallet = self.wallet )
         self.nicheimage_catalogue = initialize_nicheimage_catalogue()
         self.challenge_urls = initialize_challenge_urls()
@@ -178,30 +178,31 @@ class NicheCrossVal(SynapseBasedCrossval):
         else:
             return None
 
-    def prepare_challenge(self, model_name, pipeline_type):
-        synapse_type = self.nicheimage_catalogue[model_name]["synapse_type"]
-        synapse = synapse_type(pipeline_type=pipeline_type, model_name=model_name)
-        synapse.pipeline_params.update(self.nicheimage_catalogue[model_name]["inference_params"])
+    def prepare_challenge(self, input, pipeline_type):
+        synapse_type = self.nicheimage_catalogue[input.model_name]["synapse_type"]
+        synapse = synapse_type(pipeline_type=pipeline_type, model_name=input.model_name)
+        synapse.pipeline_params.update(self.nicheimage_catalogue[input.model_name]["inference_params"])
+        synapse.prompt = input.prompt
 
         synapse.seed = random.randint(0, 1e9)
         
-        for challenge_url, backup_func in zip(
-            self.challenge_urls[pipeline_type]["main"],
-            self.challenge_urls[pipeline_type]["backup"],
-        ):
-            if callable(challenge_url):
-                synapse = challenge_url(synapse)
-            else:
-                assert isinstance(challenge_url, str)
-                synapse = self.get_challenge(challenge_url, synapse, backup_func)
+        # for challenge_url, backup_func in zip(
+        #     self.challenge_urls[pipeline_type]["main"],
+        #     self.challenge_urls[pipeline_type]["backup"],
+        # ):
+        #     print(challenge_url)
+        #     if callable(challenge_url):
+        #         synapse = challenge_url(synapse)
+        #     else:
+        #         assert isinstance(challenge_url, str)
+        #         synapse = self.get_challenge(challenge_url, synapse, backup_func)
         
         return synapse
 
     def forward(self, input, timeout: float):
         axons = [self.metagraph.axons[i['uid']] for i in self.top_miners]
         pipeline_type = random.choice(self.nicheimage_catalogue[input.model_name]["supporting_pipelines"])
-        print(pipeline_type)
-        synapse = self.prepare_challenge(input.model_name, pipeline_type)
+        synapse = self.prepare_challenge(input, pipeline_type)
 
         responses = self.dendrite.query(
             axons = axons,
@@ -210,10 +211,8 @@ class NicheCrossVal(SynapseBasedCrossval):
             timeout = timeout,
         )
 
-        print(responses)
         return responses
 
     def run(self, input):
-        print(input)
         response = self.forward(input,60)
         return response
