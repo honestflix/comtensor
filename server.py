@@ -119,94 +119,94 @@ class VisionItem(BaseModel):
     height: Optional[int] = 1024
     init_image: Optional[str] = ''
 
-# @app.get("/")
-# def read_root():
-#     return translate_crossval.run("Hello, how are you?")
+@app.get("/")
+def read_root():
+    return translate_crossval.run("Hello, how are you?")
 
-# @app.post("/translate/", tags=["Testnet"])
-# def tranlsate_item(item: TranlsateItem):
+@app.post("/translate/", tags=["Testnet"])
+def tranlsate_item(item: TranlsateItem):
     
-#     translate_crossval.setLang(item.source_lang, item.target_lang)
-#     if item.timeout:
-#         translate_crossval.setTimeout(item.timeout)
-#     return translate_crossval.run(item.text)
+    translate_crossval.setLang(item.source_lang, item.target_lang)
+    if item.timeout:
+        translate_crossval.setTimeout(item.timeout)
+    return translate_crossval.run(item.text)
 
-# @app.post("/image-alchemy/", tags=["Mainnet"])
-# def image_generate(item: ImageItem):
-#     return imagealchemy_crossval.run(item.imageText)
+@app.post("/image-alchemy/", tags=["Mainnet"])
+def image_generate(item: ImageItem):
+    return imagealchemy_crossval.run(item.imageText)
 
-# @app.post("/sybil/", tags=["Mainnet"])
-# def sybil_search(item: SybilItem):
-#     return sybil_crossval.run({'sources': item.sources, 'query': item.query})
+@app.post("/sybil/", tags=["Mainnet"])
+def sybil_search(item: SybilItem):
+    return sybil_crossval.run({'sources': item.sources, 'query': item.query})
 
-# @app.post("/openkaito/", tags=["Mainnet"])
-# async def openkaito_search(item: OpenkaitoItem):
-#     return await openkaito_crossval.run(item.query)
+@app.post("/openkaito/", tags=["Mainnet"])
+async def openkaito_search(item: OpenkaitoItem):
+    return await openkaito_crossval.run(item.query)
 
-# @app.post("/itsai/", tags=["Mainnet"])
-# async def llm_detection(item: ItsaiItem):
-#     return await itsai_crossval.run(item.texts)
+@app.post("/itsai/", tags=["Mainnet"])
+async def llm_detection(item: ItsaiItem):
+    return await itsai_crossval.run(item.texts)
 
-# @app.post("/niche/", tags=["Mainnet"])
-# def niche_generation(item: NicheItem):
-#     return niche_crossval.run(item)
+@app.post("/niche/", tags=["Mainnet"])
+def niche_generation(item: NicheItem):
+    return niche_crossval.run(item)
 
-# @app.post("/wombo/", tags=["Mainnet"])
-# async def generate(item: WomboItem):
-#     print(item)
-#     return await wombo_crossval.run(ImageGenerationClientInputs(prompt=item.prompt, watermark=item.watermark))
+@app.post("/wombo/", tags=["Mainnet"])
+async def generate(item: WomboItem):
+    print(item)
+    return await wombo_crossval.run(ImageGenerationClientInputs(prompt=item.prompt, watermark=item.watermark))
 
-# @app.post("/fractal", tags=["Mainnet"])
-# def fractal_research(item: FractalItem):
-#     return fractal_crossval.run(item.query)
+@app.post("/fractal", tags=["Mainnet"])
+def fractal_research(item: FractalItem):
+    return fractal_crossval.run(item.query)
 
-# @app.post("/audiogen", tags=["Testnet"])
-# async def audio_generation(item: AudiogenItem):
-#     return await audiogen_crossval.run(item.type, item.prompt)
+@app.post("/audiogen", tags=["Testnet"])
+async def audio_generation(item: AudiogenItem):
+    return await audiogen_crossval.run(item.type, item.prompt)
 
-# @app.post("/llm-defender", tags=["Mainnet"])
-# def llm_defender(item: LLMDefenderItem):
-#     return llmdefender_crossval.run({"analyzer": item.analyzer})
+@app.post("/llm-defender", tags=["Mainnet"])
+def llm_defender(item: LLMDefenderItem):
+    return llmdefender_crossval.run({"analyzer": item.analyzer})
 
-# @app.post("/transcription/", tags=["Mainnet"])
-# def transcription(item: TranscriptionItem):
-#     return transcription_crossval.run({"type": item.type, "audio_url": item.audio_url, "audio_sample": item.audio_sample})
+@app.post("/transcription/", tags=["Mainnet"])
+def transcription(item: TranscriptionItem):
+    return transcription_crossval.run({"type": item.type, "audio_url": item.audio_url, "audio_sample": item.audio_sample})
 
-# @app.post("/subvortex/", tags=["Mainnet"])
-# async def subvortex_calc():
-#     return await subvortex_crossval.run()
+@app.post("/subvortex/", tags=["Mainnet"])
+async def subvortex_calc():
+    return await subvortex_crossval.run()
 
-# @app.post("/cortex", tags=["Mainnet"])
-# async def cortex_api(item: CortexItem):
-#     return await cortex_crossval.run(item)
+@app.post("/cortex", tags=["Mainnet"])
+async def cortex_api(item: CortexItem):
+    return await cortex_crossval.run(item)
 
-# @app.post("/snporacle/", tags=["Mainnet"])
-# def snporacle():
-#     return snporacle_crossval.run()
+@app.post("/snporacle/", tags=["Mainnet"])
+def snporacle():
+    return snporacle_crossval.run()
 
-# @app.post("/compute/", tags=["Mainnet"])
-# async def compute(item: ComputeItem):
-#     return compute_crossval.run(item)
+@app.post("/compute/", tags=["Mainnet"])
+async def compute(item: ComputeItem):
+    return compute_crossval.run(item)
 
-# @app.post("/bitagent/", tags=["Mainnet"])
-# def bitagent():
-#     return bitagent_crossval.run()
+@app.post("/bitagent/", tags=["Mainnet"])
+def bitagent():
+    return bitagent_crossval.run()
 
-# @app.get("/omegalist/", tags=["Mainnet"])
-# async def omega_list():
-#     return await omegalabs_crossval.get_topic()
+@app.get("/omegalist/", tags=["Mainnet"])
+async def omega_list():
+    return await omegalabs_crossval.get_topic()
 
-# @app.post("/omegalabs/", tags=["Mainnet"])
-# async def omegalabs(item: OmegalabsItem):
-#     return await omegalabs_crossval.run(item)
+@app.post("/omegalabs/", tags=["Mainnet"])
+async def omegalabs(item: OmegalabsItem):
+    return await omegalabs_crossval.run(item)
 
-# @app.post("/vision/", tags=["Mainnet"])
-# async def vision(item: VisionItem):
-#     return await vision_crossval.run(item)
+@app.post("/vision/", tags=["Mainnet"])
+async def vision(item: VisionItem):
+    return await vision_crossval.run(item)
 
-# @app.post("/omron/", tags=["Mainnet"])
-# def omron_func():
-#     return omron_crossval.run()
+@app.post("/omron/", tags=["Mainnet"])
+def omron_func():
+    return omron_crossval.run()
 
 @app.post("/sturdy", tags=["Mainnet"])
 async def sturdy():
@@ -224,22 +224,22 @@ class ImageUpload(BaseModel):
 #     result = healthcare_crossval.run(file_location)
 #     return {"result": result}
 
-# @app.post("/healthcare/", tags=["Testnet"])
-# async def upload_image(image: UploadFile = File(...)):
-#     try:
-#         # Save the file to disk or process it
-#         with open(f"{image.filename}", "wb") as buffer:
-#             shutil.copyfileobj(image.file, buffer)
-#             result = healthcare_crossval.run(image.filename)
-#             # print(result)     
-#         # You can process the file here, and then return a response
-#         return {"result": result}
-#     except Exception as e:
-#         raise HTTPException(status_code=500, detail=str(e))
+@app.post("/healthcare/", tags=["Testnet"])
+async def upload_image(image: UploadFile = File(...)):
+    try:
+        # Save the file to disk or process it
+        with open(f"{image.filename}", "wb") as buffer:
+            shutil.copyfileobj(image.file, buffer)
+            result = healthcare_crossval.run(image.filename)
+            # print(result)     
+        # You can process the file here, and then return a response
+        return {"result": result}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
-# @app.post("/text-prompting/", tags=["Mainnet"])
-# def text_prompting(item: TextPropmtItem):
-#     return textpromtingCrossval.run(item.roles, item.messages)
+@app.post("/text-prompting/", tags=["Mainnet"])
+def text_prompting(item: TextPropmtItem):
+    return textpromtingCrossval.run(item.roles, item.messages)
 
 # @app.websocket("/textprompting")
 # async def text_prompting(websocket: WebSocket):
@@ -256,25 +256,25 @@ class ImageUpload(BaseModel):
 
 subtensor = bt.subtensor(network = "local")
 
-# translate_crossval = TranslateCrossValidator(subtensor=subtensor)
-# healthcare_crossval = HealthcareCrossval(netuid = 31, topk = 1, subtensor=subtensor)
-# textpromtingCrossval = TextPromtingCrossValidator(subtensor=subtensor)
-# imagealchemy_crossval = ImageAlchemyCrossVal(subtensor=subtensor)
-# sybil_crossval = SybilCrossVal(subtensor=subtensor)
-# openkaito_crossval = OpenkaitoCrossVal(subtensor=subtensor)
-# itsai_crossval = ItsaiCrossVal(subtensor=subtensor)
-# niche_crossval = NicheCrossVal(subtensor=subtensor)
-# wombo_crossval = WomboCrossVal(subtensor=subtensor)
-# fractal_crossval = FractalCrossVal(subtensor=subtensor)
-# audiogen_crossval = AudioGenCrossVal(subtensor=subtensor)
-# llmdefender_crossval = LLMDefenderCrossVal(subtensor=subtensor)
-# transcription_crossval = TranscriptionCrossVal(subtensor=subtensor)
-# subvortex_crossval = SubvortexCrossVal(subtensor=subtensor)
-# snporacle_crossval = SnporacleCrossVal(subtensor=subtensor)
-# compute_crossval = ComputeCrossVal(subtensor=subtensor)
-# bitagent_crossval = BitagentCrossVal(subtensor=subtensor)
-# omegalabs_crossval = OmegalabsCrossVal(subtensor=subtensor)
-# cortex_crossval = CortexCrossVal(subtensor=subtensor)
-# vision_crossval = VisionCrossVal(subtensor=subtensor)
-# omron_crossval = OmronCrossVal(subtensor=subtensor)
+translate_crossval = TranslateCrossValidator(subtensor=subtensor)
+healthcare_crossval = HealthcareCrossval(netuid = 31, topk = 1, subtensor=subtensor)
+textpromtingCrossval = TextPromtingCrossValidator(subtensor=subtensor)
+imagealchemy_crossval = ImageAlchemyCrossVal(subtensor=subtensor)
+sybil_crossval = SybilCrossVal(subtensor=subtensor)
+openkaito_crossval = OpenkaitoCrossVal(subtensor=subtensor)
+itsai_crossval = ItsaiCrossVal(subtensor=subtensor)
+niche_crossval = NicheCrossVal(subtensor=subtensor)
+wombo_crossval = WomboCrossVal(subtensor=subtensor)
+fractal_crossval = FractalCrossVal(subtensor=subtensor)
+audiogen_crossval = AudioGenCrossVal(subtensor=subtensor)
+llmdefender_crossval = LLMDefenderCrossVal(subtensor=subtensor)
+transcription_crossval = TranscriptionCrossVal(subtensor=subtensor)
+subvortex_crossval = SubvortexCrossVal(subtensor=subtensor)
+snporacle_crossval = SnporacleCrossVal(subtensor=subtensor)
+compute_crossval = ComputeCrossVal(subtensor=subtensor)
+bitagent_crossval = BitagentCrossVal(subtensor=subtensor)
+omegalabs_crossval = OmegalabsCrossVal(subtensor=subtensor)
+cortex_crossval = CortexCrossVal(subtensor=subtensor)
+vision_crossval = VisionCrossVal(subtensor=subtensor)
+omron_crossval = OmronCrossVal(subtensor=subtensor)
 sturdy_crossval = SturdyCrossVal(subtensor=subtensor)
