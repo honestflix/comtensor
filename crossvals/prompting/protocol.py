@@ -1,8 +1,27 @@
+# The MIT License (MIT)
+# Copyright © 2024 Yuma Rao
+
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+# documentation files (the “Software”), to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software,
+# and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in all copies or substantial portions of
+# the Software.
+
+# THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+# THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+# OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+# DEALINGS IN THE SOFTWARE.
+
 import pydantic
 import bittensor as bt
 
-from typing import List
+from typing import List, AsyncIterator
 from starlette.responses import StreamingResponse
+
+import pdb
 
 
 class PromptingSynapse(bt.Synapse):
@@ -172,7 +191,9 @@ class StreamPromptingSynapse(bt.StreamingSynapse):
         description="Completion status of the current PromptingSynapse object. This attribute is mutable and can be updated.",
     )
 
-    async def process_streaming_response(self, response: StreamingResponse):
+    async def process_streaming_response(
+        self, response: StreamingResponse
+    ) -> AsyncIterator[str]:
         """
         `process_streaming_response` is an asynchronous method designed to process the incoming streaming response from the
         Bittensor network. It's the heart of the StreamPromptingSynapse class, ensuring that streaming tokens, which represent
@@ -186,13 +207,14 @@ class StreamPromptingSynapse(bt.StreamingSynapse):
             response: The streaming response object containing the content chunks to be processed. Each chunk in this
                       response is expected to be a set of tokens that can be decoded and split into individual messages or prompts.
         """
+
         if self.completion is None:
             self.completion = ""
+
         async for chunk in response.content.iter_any():
             tokens = chunk.decode("utf-8").split("\n")
-            for token in tokens:
-                if token:
-                    self.completion += token
+
+            self.completion = self.completion + "".join([t for t in tokens if t])
             yield tokens
 
     def deserialize(self) -> str:
@@ -232,6 +254,7 @@ class StreamPromptingSynapse(bt.StreamingSynapse):
         }
 
         def extract_info(prefix):
+            
             return {
                 key.split("_")[-1]: value
                 for key, value in headers.items()

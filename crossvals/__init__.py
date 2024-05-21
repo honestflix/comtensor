@@ -1,3 +1,3 @@
 from . import healthcare
-from . import textprompting
+from . import prompting
 from . import translate
