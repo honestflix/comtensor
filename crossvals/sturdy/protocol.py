@@ -16,22 +16,22 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-import typing
+import typing_extensions
 import bittensor as bt
 from pydantic import BaseModel, Field
 
 
 # TODO: move AllocInfo elsewhere?
-class AllocInfo(typing.TypedDict):
+class AllocInfo(typing_extensions.TypedDict):
     apy: str
-    allocations: typing.Dict[str, float]
+    allocations: typing_extensions.Dict[str, float]
 
 
 class AllocateAssetsRequest(BaseModel):
     class Config:
         use_enum_values = True
 
-    assets_and_pools: typing.Dict[str, typing.Dict | float] = Field(
+    assets_and_pools: typing_extensions.Dict[str, typing_extensions.Dict | float] = Field(
         ...,
         required=True,
         description="pools for miners to produce allocation amounts for - uid -> pool_info",
@@ -42,7 +42,7 @@ class AllocateAssetsResponse(BaseModel):
     class Config:
         use_enum_values = True
 
-    allocations: typing.Dict[str, AllocInfo] = Field(
+    allocations: typing_extensions.Dict[str, AllocInfo] = Field(
         ...,
         required=True,
         description="pools for miners to produce allocation amounts for - uid -> pool_info",
@@ -61,14 +61,14 @@ class AllocateAssetsBase(BaseModel):
 
     # Required request input, filled by sending dendrite caller.
     # TODO: what type should this be?
-    assets_and_pools: typing.Dict[str, typing.Dict | float] = Field(
+    assets_and_pools: typing_extensions.Dict[str, typing_extensions.Dict | float] = Field(
         ...,
         required=True,
         description="pools for miners to produce allocation amounts for - uid -> pool_info",
     )
 
     # Optional request output, filled by recieving axon.
-    allocations: typing.Optional[typing.Dict[str, float]] = Field(
+    allocations: typing_extensions.Optional[typing_extensions.Dict[str, float]] = Field(
         None,
         description="pools for miners to produce allocation amounts for - uid -> pool_info",
     )

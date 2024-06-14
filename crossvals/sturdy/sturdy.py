@@ -1,3 +1,4 @@
+import typing_extensions
 import bittensor as bt
 from base.synapse_based_crossval import SynapseBasedCrossval
 import random
@@ -39,7 +40,7 @@ class SturdyCrossVal(SynapseBasedCrossval):
         num = random.randint(0, int((stop - start) / step)) * step + start
         return self.format_num_prec(num, sig, max_prec)
 
-    def generate_assets_and_pools(self) -> typing.Dict:  # generate pools
+    def generate_assets_and_pools(self) -> typing_extensions.Dict:  # generate pools
         assets_and_pools = {}
         pools = {
             str(x): {

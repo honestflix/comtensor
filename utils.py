@@ -4,8 +4,6 @@ import os
 from typing import Any, Optional, Tuple
 import bittensor as bt
 
-
-
 def assert_registered(wallet: bt.wallet, metagraph: bt.metagraph) -> int:
     """Asserts the wallet is a registered miner and returns the miner's UID.
 
@@ -22,9 +20,6 @@ def assert_registered(wallet: bt.wallet, metagraph: bt.metagraph) -> int:
     )
 
     return uid
-
-
-
 
 def _wrapped_func(func: functools.partial, queue: multiprocessing.Queue):
     try:

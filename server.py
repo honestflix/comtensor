@@ -1,23 +1,18 @@
-import shutil
 from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional
 import bittensor as bt
 
-from crossvals.translate.translate import TranslateCrossValidator
-from crossvals.healthcare.healthcare import HealthcareCrossval
 from crossvals.prompting.text import PromtingCrossValidator
 from crossvals.image_alchemy.alchemy import ImageAlchemyCrossVal
 from crossvals.sybil.sybil import SybilCrossVal
 from crossvals.openkaito.openkaito import OpenkaitoCrossVal
 from crossvals.itsai.itsai import ItsaiCrossVal
-from crossvals.niche.niche import NicheCrossVal
+# from crossvals.niche.niche import NicheCrossVal
 from crossvals.wombo.wombo import WomboCrossVal
 from crossvals.wombo.protocol import ImageGenerationClientInputs
 from crossvals.fractal.fractal import FractalCrossVal
-from crossvals.audiogen.audiogen import AudioGenCrossVal
 from crossvals.llm_defender.llm_defender import LLMDefenderCrossVal
-from crossvals.transcription.transcription import TranscriptionCrossVal
 from crossvals.subvortex.subvortex import SubvortexCrossVal
 from crossvals.cortex.cortex import CortexCrossVal
 from crossvals.snporacle.snporacle import SnporacleCrossVal
@@ -35,7 +30,6 @@ from typing import List, Annotated
 
 app = FastAPI()
 
-# Enable all cross-origin
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -43,8 +37,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# healthcare_crossval.run_background_thread()
 
 class TranlsateItem(BaseModel):
     text: str
@@ -78,9 +70,9 @@ class OpenkaitoItem(BaseModel):
 class ItsaiItem(BaseModel):
     texts: List[str]
 
-class NicheItem(BaseModel):
-    model_name: str
-    prompt: str
+# class NicheItem(BaseModel):
+#     model_name: str
+#     prompt: str
 
 class WomboItem(BaseModel):
     watermark: bool
@@ -119,18 +111,6 @@ class VisionItem(BaseModel):
     height: Optional[int] = 1024
     init_image: Optional[str] = ''
 
-@app.get("/")
-def read_root():
-    return translate_crossval.run("Hello, how are you?")
-
-@app.post("/translate/", tags=["Testnet"])
-def tranlsate_item(item: TranlsateItem):
-    
-    translate_crossval.setLang(item.source_lang, item.target_lang)
-    if item.timeout:
-        translate_crossval.setTimeout(item.timeout)
-    return translate_crossval.run(item.text)
-
 @app.post("/image-alchemy/", tags=["Mainnet"])
 def image_generate(item: ImageItem):
     return imagealchemy_crossval.run(item.imageText)
@@ -147,9 +127,9 @@ async def openkaito_search(item: OpenkaitoItem):
 async def llm_detection(item: ItsaiItem):
     return await itsai_crossval.run(item.texts)
 
-@app.post("/niche/", tags=["Mainnet"])
-def niche_generation(item: NicheItem):
-    return niche_crossval.run(item)
+# @app.post("/niche/", tags=["Mainnet"])
+# def niche_generation(item: NicheItem):
+#     return niche_crossval.run(item)
 
 @app.post("/wombo/", tags=["Mainnet"])
 async def generate(item: WomboItem):
@@ -160,17 +140,9 @@ async def generate(item: WomboItem):
 def fractal_research(item: FractalItem):
     return fractal_crossval.run(item.query)
 
-@app.post("/audiogen", tags=["Testnet"])
-async def audio_generation(item: AudiogenItem):
-    return await audiogen_crossval.run(item.type, item.prompt)
-
 @app.post("/llm-defender", tags=["Mainnet"])
 def llm_defender(item: LLMDefenderItem):
     return llmdefender_crossval.run({"analyzer": item.analyzer})
-
-@app.post("/transcription/", tags=["Mainnet"])
-def transcription(item: TranscriptionItem):
-    return transcription_crossval.run({"type": item.type, "audio_url": item.audio_url, "audio_sample": item.audio_sample})
 
 @app.post("/subvortex/", tags=["Mainnet"])
 async def subvortex_calc():
@@ -212,63 +184,20 @@ def omron_func():
 async def sturdy():
     return await sturdy_crossval.run()
 
-class ImageUpload(BaseModel):
-    file: UploadFile = File(...)
-
-@app.post("/healthcare/")
-async def analyze_healthcare_image(image: ImageUpload):
-    print(image.file.filename)
-    file_location = f"images/{image.file.filename}"
-    with open(file_location, "wb+") as file_object:
-        file_object.write(await image.file.read())
-    result = healthcare_crossval.run(file_location)
-    return {"result": result}
-
-@app.post("/healthcare/", tags=["Testnet"])
-async def upload_image(image: UploadFile = File(...)):
-    try:
-        # Save the file to disk or process it
-        with open(f"{image.filename}", "wb") as buffer:
-            shutil.copyfileobj(image.file, buffer)
-            result = healthcare_crossval.run(image.filename)
-            # print(result)     
-        # You can process the file here, and then return a response
-        return {"result": result}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
 @app.post("/prompting/", tags=["Mainnet"])
 async def prompting(item: PropmtItem):
     return await promtingCrossval.run(item)
 
-# @app.websocket("/textprompting")
-# async def text_prompting(websocket: WebSocket):
-#     print("sdf")
-#     await websocket.accept()
-#     # data = await websocket.receive_text()
-#     streamingResponse = textpromtingCrossval.run()
-#     while True:
-#         print("tread_running...")
-#         data = await streamingResponse[0].__anext__()
-#         await websocket.send_json({"message": data})
-#         print(data)
-#         await asyncio.sleep(1)
-
 subtensor = bt.subtensor(network = "local")
-
-translate_crossval = TranslateCrossValidator(subtensor=subtensor)
-healthcare_crossval = HealthcareCrossval(netuid = 31, topk = 1, subtensor=subtensor)
 promtingCrossval = PromtingCrossValidator(subtensor=subtensor)
 imagealchemy_crossval = ImageAlchemyCrossVal(subtensor=subtensor)
 sybil_crossval = SybilCrossVal(subtensor=subtensor)
 openkaito_crossval = OpenkaitoCrossVal(subtensor=subtensor)
 itsai_crossval = ItsaiCrossVal(subtensor=subtensor)
-niche_crossval = NicheCrossVal(subtensor=subtensor)
+# niche_crossval = NicheCrossVal(subtensor=subtensor)
 wombo_crossval = WomboCrossVal(subtensor=subtensor)
 fractal_crossval = FractalCrossVal(subtensor=subtensor)
-audiogen_crossval = AudioGenCrossVal(subtensor=subtensor)
 llmdefender_crossval = LLMDefenderCrossVal(subtensor=subtensor)
-transcription_crossval = TranscriptionCrossVal(subtensor=subtensor)
 subvortex_crossval = SubvortexCrossVal(subtensor=subtensor)
 snporacle_crossval = SnporacleCrossVal(subtensor=subtensor)
 compute_crossval = ComputeCrossVal(subtensor=subtensor)
